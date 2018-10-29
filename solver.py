@@ -219,10 +219,12 @@ def manhattan_distance(start, goal):
      
     for y in range(4):
        for x in range(4):
-           (gx, gy) = goal_locations[start.tiles[y][x]]
-           distance += abs(gx - x) + abs(gy - y)
+           tile_number = start.tiles[y][x]
+           if tile_number != 0:
+               (gx, gy) = goal_locations[tile_number]
+               distance += abs(gx - x) + abs(gy - y)
     
-    return distance//2
+    return distance
     
 def path_as_0_moves(path):
     strpath = ""
@@ -231,25 +233,38 @@ def path_as_0_moves(path):
             strpath += p.directiontomoveto
         
     return strpath
-                    
+    
+# Rosetta Code start position
+                     
 start = Position([[ 15, 14,  1,  6],
                   [ 9, 11,  4, 12],
                   [ 0, 10,  7,  3],
                   [13,  8,  5,  2]])
+ 
+
+# two moves
+"""
+start = Position([[ 1,  2,  3,  4],
+                 [ 5,  6,  7,  8],
+                 [ 9, 10, 0, 12],
+                 [13, 14, 11,  15]])
+"""
 
 goal = Position([[ 1,  2,  3,  4],
                  [ 5,  6,  7,  8],
                  [ 9, 10, 11, 12],
                  [13, 14, 15,  0]])
                  
+"""
 result = a_star(start,goal,manhattan_distance)
 
 for r in result:
     print(r)
     
 print(path_as_0_moves(result))
+"""
 
-#print(manhattan_distance(start,goal))
+print(manhattan_distance(start,goal))
 
 """
 print(start)
