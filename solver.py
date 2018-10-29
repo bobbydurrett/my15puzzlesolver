@@ -154,6 +154,30 @@ def reconstruct_path(current):
     
     return total_path
         
+class PriorityQueue(object):
+    """Priority queue with set for fast in calculations """
+
+    def __init__(self, object_list):
+        self.qset = set(object_list)
+        self.qheap = copy.deepcopy(object_list)
+        heapq.heapify(self.qheap)
+        
+    def push(self, new_object):
+        heapq.heappush(self.qheap,new_object)
+        self.qset.add(new_object)
+        
+    def pop(self):
+        popped_object = heapq.heappop(self.qheap)
+        self.qset.remove(popped_object)
+        return popped_object
+        
+    def isinqueue(self,checked_object):
+        return checked_object in self.qset
+        
+    def heapify(self):
+        heapq.heapify(self.qheap)
+
+        
 def a_star(start, goal, heuristic):
     """ Based on https://en.wikipedia.org/wiki/A*_search_algorithm """
     
@@ -445,6 +469,7 @@ goal = Position([[ 1,  2,  3,  4],
 
 
 
+"""
 result = a_star(start,goal,linear_conflicts)
 
 print("printing results")
@@ -453,7 +478,7 @@ for r in result:
     print(r)
     
 print(path_as_0_moves(result))
-
+"""
 
 #print(manhattan_distance(start,goal))
 #print(linear_conflicts(start,goal))
@@ -469,3 +494,8 @@ for p in n:
 
 #do_test(goal,7)
 
+q = PriorityQueue([1,2,3])
+print(q.pop())
+print(q.isinqueue(1))
+q.push(33)
+q.heapify()
