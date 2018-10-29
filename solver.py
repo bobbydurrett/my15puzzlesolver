@@ -399,14 +399,14 @@ start = Position([[ 15, 14,  1,  6],
                   [13,  8,  5,  2]])
 """
 
-# 3 moves
+# 20 moves
 
 
 
-start = Position([[ 1,  2,  3,  4],
-                 [ 5,  6,  7,  8],
-                 [ 9, 0, 10, 12],
-                 [13, 14, 11,  15]])
+start = Position([[ 0,  1,  3,  4],
+                 [  9,  5,  2,  8],
+                 [  6, 10, 12,  7],
+                 [ 13, 14, 11, 15]])
 
  
 # two moves
@@ -444,7 +444,7 @@ goal = Position([[ 1,  2,  3,  4],
                  
 
 
-"""
+
 result = a_star(start,goal,linear_conflicts)
 
 print("printing results")
@@ -453,7 +453,7 @@ for r in result:
     print(r)
     
 print(path_as_0_moves(result))
-"""
+
 
 #print(manhattan_distance(start,goal))
 #print(linear_conflicts(start,goal))
@@ -467,5 +467,5 @@ for p in n:
     print(p)
 """
 
-do_test(goal,7)
+#do_test(goal,7)
 
