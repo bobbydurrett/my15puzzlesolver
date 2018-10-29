@@ -171,17 +171,17 @@ def a_star(start, goal, heuristic):
     # The cost of going from start to start is zero.
     start.gscore = 0
     
-    iteration = 0
+#    iteration = 0
     
     while len(openSet) > 0:
-        
+        """
         iteration += 1
         print("iteration "+str(iteration))
         for e in openSet:
             print("gscore "+str(e.gscore))
             print("fscore "+str(e.fscore))
             print(e)
-        
+        """
         current = heapq.heappop(openSet)
         if current.tiles_match(goal):
             return reconstruct_path(current)
@@ -302,6 +302,92 @@ def linear_conflicts(start, goal):
     
         
     return distance + manhattan_distance(start, goal)
+
+def do_move(goal,direction):
+    """
+    board is 4x4 list of lists with
+    0,0 as top left.
+    
+    board[y][x]
+    
+    direction is r,l,u,d
+    
+    returns updated board
+    """
+    
+    board = copy.deepcopy(goal.tiles)
+
+    # find 0 - blank square
+    
+    x0 = None
+    y0 = None
+    
+    for i in range(4):
+        for j in range(4):
+            if board[i][j] == 0:
+                y0 = i
+                x0 = j
+                
+    if x0 == None or y0 == None:
+        return goal
+        
+    if direction == 'r':
+        # move 0 to the right
+        if x0 < 3:
+            temp = board[y0][x0+1]
+            board[y0][x0+1] = 0
+            board[y0][x0] = temp
+    elif direction == 'l':
+        # move 0 to the left
+        if x0 > 0:
+            temp = board[y0][x0-1]
+            board[y0][x0-1] = 0
+            board[y0][x0] = temp
+    elif direction == 'u':
+        # move 0 up
+        if y0 > 0:
+            temp = board[y0-1][x0]
+            board[y0-1][x0] = 0
+            board[y0][x0] = temp
+    elif direction == 'd':
+        # move 0 down
+        if y0 < 3:
+            temp = board[y0+1][x0]
+            board[y0+1][x0] = 0
+            board[y0][x0] = temp
+    else:
+        print("Bad direction: "+direction)
+    
+    return Position(board)
+    
+def test_solver(goal,path_length,start,path_left):
+    """
+    Try's every path of length path_length testing solver.
+    
+    top level call is just goal, path_length, goal, path_length
+    
+    last two change with recursive calls.
+    
+    """
+    
+    if path_left <= 0:
+        result = a_star(start,goal,linear_conflicts)
+        if len(result) - 1 > path_length:
+            print(str(len(result) - 1)+" is more than "+str(path_length))
+            print(start)
+        
+    else:
+        new_start = do_move(start,'r')
+        test_solver(goal,path_length,new_start,path_left-1)
+        new_start = do_move(start,'l')
+        test_solver(goal,path_length,new_start,path_left-1)
+        new_start = do_move(start,'u')
+        test_solver(goal,path_length,new_start,path_left-1)
+        new_start = do_move(start,'d')
+        test_solver(goal,path_length,new_start,path_left-1)
+        
+def do_test(goal,path_length):        
+    test_solver(goal,path_length,goal,path_length)
     
 # Rosetta Code start position
                      
@@ -312,16 +398,26 @@ start = Position([[ 15, 14,  1,  6],
                   [ 0, 10,  7,  3],
                   [13,  8,  5,  2]])
 """
- 
-# two moves
+
+# 3 moves
 
 
 
 start = Position([[ 1,  2,  3,  4],
                  [ 5,  6,  7,  8],
-                 [ 9, 10, 0, 12],
+                 [ 9, 0, 10, 12],
                  [13, 14, 11,  15]])
 
+ 
+# two moves
+
+"""
+
+start = Position([[ 1,  2,  3,  4],
+                 [ 5,  6,  7,  8],
+                 [ 9, 10, 0, 12],
+                 [13, 14, 11,  15]])
+"""
 
 # one move
 
@@ -348,6 +444,7 @@ goal = Position([[ 1,  2,  3,  4],
                  
 
 
+"""
 result = a_star(start,goal,linear_conflicts)
 
 print("printing results")
@@ -356,7 +453,7 @@ for r in result:
     print(r)
     
 print(path_as_0_moves(result))
-
+"""
 
 #print(manhattan_distance(start,goal))
 #print(linear_conflicts(start,goal))
@@ -370,5 +467,5 @@ for p in n:
     print(p)
 """
 
-
+do_test(goal,7)
 
