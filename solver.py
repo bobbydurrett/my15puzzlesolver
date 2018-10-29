@@ -234,6 +234,63 @@ def path_as_0_moves(path):
         
     return strpath
     
+def linear_conflicts(start, goal):
+    """ 
+    add to manhattan distance if tiles are on same row or column and have to move
+    out of each others way.
+    
+    For example:
+    
+    X  1 2 X start
+    
+    X G2 2 X goal
+    
+    For a tile in a row, if its goal is to its right look for a tile to its
+    right whose goal is on the original tile or to its left.
+    
+    Flip for columns
+    
+    """
+    
+    distance = 0
+    
+    # do for each row
+    for row in range(4):
+        # look at first three tiles in source
+        for scol in range(3):
+            # look for goal to right in same row
+            for gcol in range(scol+1,4):
+                if goal.tiles[row][gcol] == start.tiles[row][scol]:
+                    # goal to right found
+                    # ccol is tile location, gcol is it's goal's location
+                    # find a tile to its right
+                    for rcol in range(scol+1,4):
+                        # look for goal to left in ccol or to left of that
+                        for fcol in range(scol,-1,-1):
+                            if goal.tiles[row][fcol] == start.tiles[row][rcol]:
+                               # found crossing
+                               distance += 2
+
+    # do for each col
+    for col in range(4):
+        # look at first three tiles in source
+        for srow in range(3):
+            # look for goal to right in same col
+            for grow in range(srow+1,4):
+                if goal.tiles[grow][col] == start.tiles[srow][col]:
+                    # goal to right found
+                    # crow is tile location, grow is it's goal's location
+                    # find a tile to its right
+                    for rrow in range(srow+1,4):
+                        # look for goal to left in crow or to left of that
+                        for frow in range(srow,-1,-1):
+                            if goal.tiles[frow][col] == start.tiles[rrow][col]:
+                               # found crossing
+                               distance += 2
+    
+        
+    return distance + manhattan_distance(start, goal)
+    
 # Rosetta Code start position
                      
 start = Position([[ 15, 14,  1,  6],
@@ -241,13 +298,23 @@ start = Position([[ 15, 14,  1,  6],
                   [ 0, 10,  7,  3],
                   [13,  8,  5,  2]])
  
-
+ 
 # two moves
+
 """
 start = Position([[ 1,  2,  3,  4],
                  [ 5,  6,  7,  8],
                  [ 9, 10, 0, 12],
                  [13, 14, 11,  15]])
+"""
+
+# two linear conflicts
+
+"""
+start = Position([[ 1,  2,  3,  4],
+                 [ 9,  6,  7,  8],
+                 [ 5, 11, 10, 12],
+                 [13, 14, 15,  0]])
 """
 
 goal = Position([[ 1,  2,  3,  4],
@@ -256,7 +323,7 @@ goal = Position([[ 1,  2,  3,  4],
                  [13, 14, 15,  0]])
                  
 """
-result = a_star(start,goal,manhattan_distance)
+result = a_star(start,goal,linear_conflicts)
 
 for r in result:
     print(r)
@@ -265,6 +332,7 @@ print(path_as_0_moves(result))
 """
 
 print(manhattan_distance(start,goal))
+print(linear_conflicts(start,goal))
 
 """
 print(start)
