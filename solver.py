@@ -171,7 +171,17 @@ def a_star(start, goal, heuristic):
     # The cost of going from start to start is zero.
     start.gscore = 0
     
+    iteration = 0
+    
     while len(openSet) > 0:
+        
+        iteration += 1
+        print("iteration "+str(iteration))
+        for e in openSet:
+            print("gscore "+str(e.gscore))
+            print("fscore "+str(e.fscore))
+            print(e)
+        
         current = heapq.heappop(openSet)
         if current.tiles_match(goal):
             return reconstruct_path(current)
@@ -260,7 +270,8 @@ def linear_conflicts(start, goal):
         for scol in range(3):
             # look for goal to right in same row
             for gcol in range(scol+1,4):
-                if goal.tiles[row][gcol] == start.tiles[row][scol]:
+                start_tile = start.tiles[row][scol]
+                if goal.tiles[row][gcol] == start_tile and start_tile != 0:
                     # goal to right found
                     # ccol is tile location, gcol is it's goal's location
                     # find a tile to its right
@@ -277,7 +288,8 @@ def linear_conflicts(start, goal):
         for srow in range(3):
             # look for goal to right in same col
             for grow in range(srow+1,4):
-                if goal.tiles[grow][col] == start.tiles[srow][col]:
+                start_tile = start.tiles[srow][col]
+                if goal.tiles[grow][col] == start_tile and start_tile != 0:
                     # goal to right found
                     # crow is tile location, grow is it's goal's location
                     # find a tile to its right
@@ -293,19 +305,31 @@ def linear_conflicts(start, goal):
     
 # Rosetta Code start position
                      
+
+"""
 start = Position([[ 15, 14,  1,  6],
                   [ 9, 11,  4, 12],
                   [ 0, 10,  7,  3],
                   [13,  8,  5,  2]])
- 
+"""
  
 # two moves
 
-"""
+
+
 start = Position([[ 1,  2,  3,  4],
                  [ 5,  6,  7,  8],
                  [ 9, 10, 0, 12],
                  [13, 14, 11,  15]])
+
+
+# one move
+
+"""
+start = Position([[ 1,  2,  3,  4],
+                 [ 5,  6,  7,  8],
+                 [ 9, 10, 11, 12],
+                 [13, 14, 0,  15]])
 """
 
 # two linear conflicts
@@ -322,17 +346,20 @@ goal = Position([[ 1,  2,  3,  4],
                  [ 9, 10, 11, 12],
                  [13, 14, 15,  0]])
                  
-"""
+
+
 result = a_star(start,goal,linear_conflicts)
+
+print("printing results")
 
 for r in result:
     print(r)
     
 print(path_as_0_moves(result))
-"""
 
-print(manhattan_distance(start,goal))
-print(linear_conflicts(start,goal))
+
+#print(manhattan_distance(start,goal))
+#print(linear_conflicts(start,goal))
 
 """
 print(start)
