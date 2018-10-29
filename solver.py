@@ -205,7 +205,7 @@ def a_star(start, goal, heuristic):
                 neighbor.cameFrom = current
                 neighbor.gscore = tentative_gScore
                 neighbor.fscore = neighbor.gscore + heuristic(neighbor, goal)
-                heapq.heappush(heapify)
+                heapq.heapify()
             
 def manhattan_distance(start, goal):
     """ 
