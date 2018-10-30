@@ -69,6 +69,15 @@ class Position(object):
     def tiles_match(self,other):
         # compare two sets of tile positions
         return (self.tiles == other.tiles)
+    
+    def copy_tiles(self):
+        """ returns a copy of the tiles list of lists """
+        new_tiles = []
+        for l in self.tiles:
+            new_row = l[:]
+            new_tiles.append(new_row)
+        
+        return new_tiles
         
     def neighbors(self):
         """
@@ -102,7 +111,7 @@ class Position(object):
             
         # move 0 to the right
         if x0 < 3:
-            new_tiles = copy.deepcopy(self.tiles)
+            new_tiles = self.copy_tiles()
             temp = new_tiles[y0][x0+1]
             new_tiles[y0][x0+1] = 0
             new_tiles[y0][x0] = temp
@@ -111,7 +120,7 @@ class Position(object):
             neighbor_list.append(new_position)
         # move 0 to the left
         if x0 > 0:
-            new_tiles = copy.deepcopy(self.tiles)
+            new_tiles = self.copy_tiles()
             temp = new_tiles[y0][x0-1]
             new_tiles[y0][x0-1] = 0
             new_tiles[y0][x0] = temp
@@ -120,7 +129,7 @@ class Position(object):
             neighbor_list.append(new_position)
         # move 0 up
         if y0 > 0:
-            new_tiles = copy.deepcopy(self.tiles)
+            new_tiles = self.copy_tiles()
             temp = new_tiles[y0-1][x0]
             new_tiles[y0-1][x0] = 0
             new_tiles[y0][x0] = temp
@@ -129,7 +138,7 @@ class Position(object):
             neighbor_list.append(new_position)
         # move 0 down
         if y0 < 3:
-            new_tiles = copy.deepcopy(self.tiles)
+            new_tiles = self.copy_tiles()
             temp = new_tiles[y0+1][x0]
             new_tiles[y0+1][x0] = 0
             new_tiles[y0][x0] = temp
@@ -341,7 +350,7 @@ def do_move(goal,direction):
     returns updated board
     """
     
-    board = copy.deepcopy(goal.tiles)
+    board = goal.copy_tiles()
 
     # find 0 - blank square
     
@@ -427,9 +436,20 @@ start = Position([[ 15, 14,  1,  6],
 # 20 moves
 
 
-
+"""
 start = Position([[ 0,  1,  3,  4],
                  [  9,  5,  2,  8],
+                 [  6, 10, 12,  7],
+                 [ 13, 14, 11, 15]])
+"""
+
+
+# 21 moves
+
+
+
+start = Position([[ 9,  1,  3,  4],
+                 [  0,  5,  2,  8],
                  [  6, 10, 12,  7],
                  [ 13, 14, 11, 15]])
 
