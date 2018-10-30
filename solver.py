@@ -159,7 +159,7 @@ class PriorityQueue(object):
 
     def __init__(self, object_list):
         self.qset = set(object_list)
-        self.qheap = copy.deepcopy(object_list)
+        self.qheap = object_list
         heapq.heapify(self.qheap)
         
     def push(self, new_object):
@@ -176,6 +176,9 @@ class PriorityQueue(object):
         
     def heapify(self):
         heapq.heapify(self.qheap)
+        
+    def nummembers(self):
+        return len(self.qset)
 
         
 def a_star(start, goal, heuristic):
@@ -189,15 +192,14 @@ def a_star(start, goal, heuristic):
     # For the first node, the fscore is completely heuristic.
     
     start.fscore = heuristic(start, goal)
-    openSet = []
-    heapq.heappush(openSet, start)
+    openSet = PriorityQueue([start])
  
     # The cost of going from start to start is zero.
     start.gscore = 0
     
-#    iteration = 0
+    # iteration = 0
     
-    while len(openSet) > 0:
+    while openSet.nummembers() > 0:
         """
         iteration += 1
         print("iteration "+str(iteration))
@@ -206,7 +208,7 @@ def a_star(start, goal, heuristic):
             print("fscore "+str(e.fscore))
             print(e)
         """
-        current = heapq.heappop(openSet)
+        current = openSet.pop()
         if current.tiles_match(goal):
             return reconstruct_path(current)
             
@@ -220,16 +222,16 @@ def a_star(start, goal, heuristic):
             # All nodes are 1 move from their neighbors
             tentative_gScore = current.gscore + 1
 
-            if neighbor not in openSet:	# Discover a new node
+            if not openSet.isinqueue(neighbor):	# Discover a new node
                 neighbor.cameFrom = current
                 neighbor.gscore = tentative_gScore
                 neighbor.fscore = neighbor.gscore + heuristic(neighbor, goal)
-                heapq.heappush(openSet,neighbor)
+                openSet.push(neighbor)
             elif tentative_gScore < neighbor.gscore:
                 neighbor.cameFrom = current
                 neighbor.gscore = tentative_gScore
                 neighbor.fscore = neighbor.gscore + heuristic(neighbor, goal)
-                heapq.heapify()
+                openSet.heapify()
             
 def manhattan_distance(start, goal):
     """ 
@@ -414,9 +416,8 @@ def do_test(goal,path_length):
     test_solver(goal,path_length,goal,path_length)
     
 # Rosetta Code start position
-                     
 
-"""
+"""                    
 start = Position([[ 15, 14,  1,  6],
                   [ 9, 11,  4, 12],
                   [ 0, 10,  7,  3],
@@ -432,7 +433,8 @@ start = Position([[ 0,  1,  3,  4],
                  [  6, 10, 12,  7],
                  [ 13, 14, 11, 15]])
 
- 
+
+
 # two moves
 
 """
@@ -469,7 +471,7 @@ goal = Position([[ 1,  2,  3,  4],
 
 
 
-"""
+
 result = a_star(start,goal,linear_conflicts)
 
 print("printing results")
@@ -478,7 +480,7 @@ for r in result:
     print(r)
     
 print(path_as_0_moves(result))
-"""
+
 
 #print(manhattan_distance(start,goal))
 #print(linear_conflicts(start,goal))
@@ -493,9 +495,10 @@ for p in n:
 """
 
 #do_test(goal,7)
-
+"""
 q = PriorityQueue([1,2,3])
 print(q.pop())
 print(q.isinqueue(1))
 q.push(33)
 q.heapify()
+"""
