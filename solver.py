@@ -301,19 +301,21 @@ def linear_conflicts(start, goal):
     
     # do for each row
     for row in range(4):
+        start_row = start.tiles[row]
+        goal_row = goal.tiles[row]
         # look at first three tiles in source
         for scol in range(3):
             # look for goal to right in same row
             for gcol in range(scol+1,4):
-                start_tile = start.tiles[row][scol]
-                if goal.tiles[row][gcol] == start_tile and start_tile != 0:
+                start_tile = start_row[scol]
+                if goal_row[gcol] == start_tile and start_tile != 0:
                     # goal to right found
                     # ccol is tile location, gcol is it's goal's location
                     # find a tile to its right
                     for rcol in range(scol+1,4):
                         # look for goal to left in ccol or to left of that
                         for fcol in range(scol,-1,-1):
-                            if goal.tiles[row][fcol] == start.tiles[row][rcol]:
+                            if goal_row[fcol] == start_row[rcol]:
                                # found crossing
                                distance += 2
 
@@ -493,6 +495,7 @@ goal = Position([[ 1,  2,  3,  4],
 
 
 result = a_star(start,goal,linear_conflicts)
+#result = a_star(start,goal,manhattan_distance)
 
 print("printing results")
 
