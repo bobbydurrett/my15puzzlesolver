@@ -249,25 +249,29 @@ def manhattan_distance(start, goal):
     differences in x and y values for all of the numbers.
     """
         
-    # store the locations of the goal numbers in a dictionary
+    # store the locations of the found tile numbers
     
-    goal_locations = dict()
+    found = dict()
     
-    for y in range(4):
-        for x in range(4):
-            goal_locations[goal.tiles[y][x]] = (x,y)
-            
-    # find all the start locations in the dictionary and calculate
-    # manhattan dist for each
-     
     distance = 0
-     
-    for y in range(4):
-       for x in range(4):
-           tile_number = start.tiles[y][x]
-           if tile_number != 0:
-               (gx, gy) = goal_locations[tile_number]
-               distance += abs(gx - x) + abs(gy - y)
+    
+    for row in range(4):
+        for col in range(4):
+            start_tile = start.tiles[row][col]
+            goal_tile = goal.tiles[row][col]
+            if start_tile in found:
+                (frow, fcol) = found[start_tile]
+                distance += abs(frow - row) + abs(fcol - col)
+            else:
+                if start_tile != 0:
+                    found[start_tile] = (row,col)
+
+            if goal_tile in found:
+                (frow, fcol) = found[goal_tile]
+                distance += abs(frow - row) + abs(fcol - col)
+            else:
+                if goal_tile != 0:
+                    found[goal_tile] = (row,col)
     
     return distance
     
@@ -428,7 +432,7 @@ def do_test(goal,path_length):
     
 # Rosetta Code start position
 
-"""                    
+"""                   
 start = Position([[ 15, 14,  1,  6],
                   [ 9, 11,  4, 12],
                   [ 0, 10,  7,  3],
@@ -496,6 +500,7 @@ goal = Position([[ 1,  2,  3,  4],
 
 result = a_star(start,goal,linear_conflicts)
 #result = a_star(start,goal,manhattan_distance)
+
 
 print("printing results")
 
