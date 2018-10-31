@@ -7,3 +7,5 @@ It did not run fast enough to solve the Rosetta Code
 problem with 52 moves in a reasonable length of time.
 i.e. Not in the lifetime of the universe.
 
+idastar.py is my IDA* attempt. Jury is still out on
+how fast it is.
