@@ -189,9 +189,79 @@ class PriorityQueue(object):
     def nummembers(self):
         return len(self.qset)
 
+class HeuristicObj(object):
+    """ Object used to preprocess goal position for heuristic function """
+
+    def __init__(self, goal):
+        self.goal_map = dict()
         
-def a_star(start, goal, heuristic):
+        self.goal_lists = goal.tiles
+        
+        for row in range(4):
+            for col in range(4):
+                self.goal_map[goal.tiles[row][col]] = (row, col)
+                
+    def heuristic(self,start):
+        """ Estimates the number of moves from start to goal  """
+        
+        distance = 0
+        
+        # calculate manhattan distance
+        
+        for row in range(4):
+            for col in range(4):
+                start_tilenum = start.tiles[row][col]
+                if start_tilenum != 0:
+                    (grow, gcol) = self.goal_map[start_tilenum]
+                    distance += abs(row - grow) + abs(col - gcol)
+                    
+        # add linear conflicts 
+        
+        # do for each row
+        for row in range(4):
+            start_row = start.tiles[row]
+            goal_row = self.goal_lists[row]
+            # look at first three tiles in source
+            for scol in range(3):
+                # look for goal to right in same row
+                for gcol in range(scol+1,4):
+                    start_tile = start_row[scol]
+                    if goal_row[gcol] == start_tile and start_tile != 0:
+                        # goal to right found
+                        # ccol is tile location, gcol is it's goal's location
+                        # find a tile to its right
+                        for rcol in range(scol+1,4):
+                            # look for goal to left in ccol or to left of that
+                            for fcol in range(scol,-1,-1):
+                                if goal_row[fcol] == start_row[rcol]:
+                                   # found crossing
+                                   distance += 2
+    
+        # do for each col
+        for col in range(4):
+            # look at first three tiles in source
+            for srow in range(3):
+                # look for goal to right in same col
+                for grow in range(srow+1,4):
+                    start_tile = start.tiles[srow][col]
+                    if self.goal_lists[grow][col] == start_tile and start_tile != 0:
+                        # goal to right found
+                        # crow is tile location, grow is it's goal's location
+                        # find a tile to its right
+                        for rrow in range(srow+1,4):
+                            # look for goal to left in crow or to left of that
+                            for frow in range(srow,-1,-1):
+                                if self.goal_lists[frow][col] == start.tiles[rrow][col]:
+                                   # found crossing
+                                   distance += 2        
+        return distance
+        
+def a_star(start, goal):
     """ Based on https://en.wikipedia.org/wiki/A*_search_algorithm """
+    
+    # Process goal position for use in heuristic
+    
+    hob = HeuristicObj(goal)
     
     # The set of nodes already evaluated
     closedSet = set()
@@ -200,23 +270,13 @@ def a_star(start, goal, heuristic):
     # Initially, only the start node is known.
     # For the first node, the fscore is completely heuristic.
     
-    start.fscore = heuristic(start, goal)
+    start.fscore = hob.heuristic(start)
     openSet = PriorityQueue([start])
  
     # The cost of going from start to start is zero.
     start.gscore = 0
     
-    # iteration = 0
-    
     while openSet.nummembers() > 0:
-        """
-        iteration += 1
-        print("iteration "+str(iteration))
-        for e in openSet:
-            print("gscore "+str(e.gscore))
-            print("fscore "+str(e.fscore))
-            print(e)
-        """
         current = openSet.pop()
         if current.tiles_match(goal):
             return reconstruct_path(current)
@@ -234,47 +294,14 @@ def a_star(start, goal, heuristic):
             if not openSet.isinqueue(neighbor):	# Discover a new node
                 neighbor.cameFrom = current
                 neighbor.gscore = tentative_gScore
-                neighbor.fscore = neighbor.gscore + heuristic(neighbor, goal)
+                neighbor.fscore = neighbor.gscore + hob.heuristic(neighbor)
                 openSet.push(neighbor)
             elif tentative_gScore < neighbor.gscore:
                 neighbor.cameFrom = current
                 neighbor.gscore = tentative_gScore
-                neighbor.fscore = neighbor.gscore + heuristic(neighbor, goal)
+                neighbor.fscore = neighbor.gscore + hob.heuristic(neighbor)
                 openSet.heapify()
-            
-def manhattan_distance(start, goal):
-    """ 
-    estimate the number of moves from the start to the goal
-    using manhattan distance. Sum the absolute value of the 
-    differences in x and y values for all of the numbers.
-    """
-        
-    # store the locations of the found tile numbers
-    
-    found = dict()
-    
-    distance = 0
-    
-    for row in range(4):
-        for col in range(4):
-            start_tile = start.tiles[row][col]
-            goal_tile = goal.tiles[row][col]
-            if start_tile in found:
-                (frow, fcol) = found[start_tile]
-                distance += abs(frow - row) + abs(fcol - col)
-            else:
-                if start_tile != 0:
-                    found[start_tile] = (row,col)
-
-            if goal_tile in found:
-                (frow, fcol) = found[goal_tile]
-                distance += abs(frow - row) + abs(fcol - col)
-            else:
-                if goal_tile != 0:
-                    found[goal_tile] = (row,col)
-    
-    return distance
-    
+                
 def path_as_0_moves(path):
     strpath = ""
     for p in path:
@@ -283,66 +310,6 @@ def path_as_0_moves(path):
         
     return strpath
     
-def linear_conflicts(start, goal):
-    """ 
-    add to manhattan distance if tiles are on same row or column and have to move
-    out of each others way.
-    
-    For example:
-    
-    X  1 2 X start
-    
-    X G2 2 X goal
-    
-    For a tile in a row, if its goal is to its right look for a tile to its
-    right whose goal is on the original tile or to its left.
-    
-    Flip for columns
-    
-    """
-    
-    distance = 0
-    
-    # do for each row
-    for row in range(4):
-        start_row = start.tiles[row]
-        goal_row = goal.tiles[row]
-        # look at first three tiles in source
-        for scol in range(3):
-            # look for goal to right in same row
-            for gcol in range(scol+1,4):
-                start_tile = start_row[scol]
-                if goal_row[gcol] == start_tile and start_tile != 0:
-                    # goal to right found
-                    # ccol is tile location, gcol is it's goal's location
-                    # find a tile to its right
-                    for rcol in range(scol+1,4):
-                        # look for goal to left in ccol or to left of that
-                        for fcol in range(scol,-1,-1):
-                            if goal_row[fcol] == start_row[rcol]:
-                               # found crossing
-                               distance += 2
-
-    # do for each col
-    for col in range(4):
-        # look at first three tiles in source
-        for srow in range(3):
-            # look for goal to right in same col
-            for grow in range(srow+1,4):
-                start_tile = start.tiles[srow][col]
-                if goal.tiles[grow][col] == start_tile and start_tile != 0:
-                    # goal to right found
-                    # crow is tile location, grow is it's goal's location
-                    # find a tile to its right
-                    for rrow in range(srow+1,4):
-                        # look for goal to left in crow or to left of that
-                        for frow in range(srow,-1,-1):
-                            if goal.tiles[frow][col] == start.tiles[rrow][col]:
-                               # found crossing
-                               distance += 2
-    
-        
-    return distance + manhattan_distance(start, goal)
 
 def do_move(goal,direction):
     """
@@ -412,7 +379,7 @@ def test_solver(goal,path_length,start,path_left):
     """
     
     if path_left <= 0:
-        result = a_star(start,goal,linear_conflicts)
+        result = a_star(start,goal)
         if len(result) - 1 > path_length:
             print(str(len(result) - 1)+" is more than "+str(path_length))
             print(start)
@@ -498,7 +465,7 @@ goal = Position([[ 1,  2,  3,  4],
 
 
 
-result = a_star(start,goal,linear_conflicts)
+result = a_star(start,goal)
 #result = a_star(start,goal,manhattan_distance)
 
 
