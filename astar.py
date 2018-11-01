@@ -193,7 +193,9 @@ class HeuristicObj(object):
     """ Object used to preprocess goal position for heuristic function """
 
     def __init__(self, goal):
-        self.goal_map = dict()
+        self.goal_map = []
+        for i in range(16):
+            self.goal_map.append(i)    
         
         self.goal_lists = goal.tiles
         
