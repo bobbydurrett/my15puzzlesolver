@@ -26,14 +26,16 @@ def linear_conflicts(start_list,goal_list):
         if start_square > goal_square:
             smaller = goal_square
             larger = start_square
+            direction = 'left'
         else:
             smaller = start_square
             larger = goal_square
+            direction = 'right'
         squares = set()
         for x in range(smaller,larger+1):
             squares.add(x)
         
-        occupied_squares.append([tile_num,squares])    
+        occupied_squares.append([tile_num,squares,direction])    
     
     # find tiles that move through the same squares and count
     # the conflicts
@@ -41,12 +43,12 @@ def linear_conflicts(start_list,goal_list):
     conflicts = 0
     
     while len(occupied_squares) > 0:
-        tile_num, squares = occupied_squares.pop()
+        tile_num, squares, direction = occupied_squares.pop()
         # find the tiles who interest with this tile
         to_remove = []
         for o in range(len(occupied_squares)):
-            otile_num, osquares = occupied_squares[o]
-            if len(osquares&squares) > 0:
+            otile_num, osquares, odirection = occupied_squares[o]
+            if len(osquares&squares) > 0 and direction != odirection:
                 conflicts += 1
                 to_remove.append(occupied_squares[o])
         for o in to_remove:
