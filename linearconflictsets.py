@@ -55,3 +55,35 @@ def linear_conflicts(start_list,goal_list):
     # add 2 to estimate for each linear conflict
      
     return 2 * conflicts
+
+# answer is 6
+
+start = [1, 2, 3, 4]
+goal = [4, 3, 2, 1]
+print(start)
+print(goal)
+print(linear_conflicts(start,goal))
+
+# answer is 4
+
+start = [1, 2, 3, 5]
+goal = [4, 3, 2, 1]
+print(start)
+print(goal)
+print(linear_conflicts(start,goal))
+
+# answer is 2
+
+start = [7, 2, 3, 5]
+goal = [4, 3, 2, 1]
+print(start)
+print(goal)
+print(linear_conflicts(start,goal))
+
+# answer is 0
+
+start = [13, 0, 14, 15]
+goal = [13, 14, 15, 0]
+print(start)
+print(goal)
+print(linear_conflicts(start,goal))
