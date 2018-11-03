@@ -206,6 +206,11 @@ def linear_conflicts(start_list,goal_list):
             if start_list[s] == goal_list[g] and start_list[s] != 0:
                 # store tile number and the start and goal square number
                 tiles_with_goals.append((start_list[s], s, g))
+    
+    # have to have 2 tiles with goals on the same line
+    
+    if len(tiles_with_goals) < 2:
+        return 0
                 
     # find the squares that each tile in tiles_with_goals
     # would go through to get to its goal
@@ -257,13 +262,203 @@ def listconflicts(goal_list):
     """ 
     list all possible start lists that will have at least
     one linear conflict.
+    
+    Possible goal tile configurations
+    
+    g g g g
+    g g g x
+    g g x g
+    g x g g
+    x g g g
+    g g x x
+    g x g x
+    g x x g
+    x g g x
+    x g x g
+    x x g g
+        
     """
     
-    # build list of goal list tile numbers plus 99 to represent all the other tiles.
-        
-    tile_list = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
-
+    all_tiles = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+    
+    non_goal_tiles = []
+    
+    for t in all_tiles:
+        if t not in goal_list:
+            non_goal_tiles.append(t) 
+            
     combinations = lcmap()
+
+    # g g g g
+    
+    for i in goal_list:
+        tile_list2 = goal_list[:]
+        tile_list2.remove(i)
+        for j in tile_list2:
+            tile_list3 = tile_list2[:]
+            tile_list3.remove(j)
+            for k in tile_list3:
+                tile_list4 = tile_list3[:]
+                tile_list4.remove(k)
+                for l in tile_list4:
+                    start_list = (i, j, k, l)
+                    conflictadd = linear_conflicts(start_list,goal_list)
+                    if conflictadd > 0:
+                        combinations[start_list]=conflictadd    
+    
+    # g g g x
+    
+    for i in goal_list:
+        tile_list2 = goal_list[:]
+        tile_list2.remove(i)
+        for j in tile_list2:
+            tile_list3 = tile_list2[:]
+            tile_list3.remove(j)
+            for k in tile_list3:
+                for l in non_goal_tiles:
+                    start_list = (i, j, k, l)
+                    conflictadd = linear_conflicts(start_list,goal_list)
+                    if conflictadd > 0:
+                        combinations[start_list]=conflictadd  
+
+    # g g x g
+    
+    for i in goal_list:
+        tile_list2 = goal_list[:]
+        tile_list2.remove(i)
+        for j in tile_list2:
+            tile_list3 = tile_list2[:]
+            tile_list3.remove(j)
+            for k in non_goal_tiles:
+                for l in tile_list3:
+                    start_list = (i, j, k, l)
+                    conflictadd = linear_conflicts(start_list,goal_list)
+                    if conflictadd > 0:
+                        combinations[start_list]=conflictadd
+    # g x g g
+    
+    for i in goal_list:
+        tile_list2 = goal_list[:]
+        tile_list2.remove(i)
+        for j in non_goal_tiles:
+            for k in tile_list2:
+                tile_list3 = tile_list2[:]
+                tile_list3.remove(k)
+                for l in tile_list3:
+                    start_list = (i, j, k, l)
+                    conflictadd = linear_conflicts(start_list,goal_list)
+                    if conflictadd > 0:
+                        combinations[start_list]=conflictadd
+
+    # x g g g
+    
+    for i in non_goal_tiles:
+        for j in goal_list:
+            tile_list2 = goal_list[:]
+            tile_list2.remove(j)
+            for k in tile_list2:
+                tile_list3 = tile_list2[:]
+                tile_list3.remove(k)
+                for l in tile_list3:
+                    start_list = (i, j, k, l)
+                    conflictadd = linear_conflicts(start_list,goal_list)
+                    if conflictadd > 0:
+                        combinations[start_list]=conflictadd
+
+    # g g x x
+
+    for i in goal_list:
+        tile_list2 = goal_list[:]
+        tile_list2.remove(i)
+        for j in tile_list2:
+            tile_list3 = tile_list2[:]
+            tile_list3.remove(j)
+            for k in non_goal_tiles:
+                tile_list4 = non_goal_tiles[:]
+                tile_list4.remove(k)
+                for l in tile_list4:
+                    start_list = (i, j, k, l)
+                    conflictadd = linear_conflicts(start_list,goal_list)
+                    if conflictadd > 0:
+                        combinations[start_list]=conflictadd 
+                        
+    # g x g x
+
+    for i in goal_list:
+        tile_list2 = goal_list[:]
+        tile_list2.remove(i)
+        for j in non_goal_tiles:
+            tile_list3 = non_goal_tiles[:]
+            tile_list3.remove(j)
+            for k in tile_list2:
+                for l in tile_list3:
+                    start_list = (i, j, k, l)
+                    conflictadd = linear_conflicts(start_list,goal_list)
+                    if conflictadd > 0:
+                        combinations[start_list]=conflictadd    
+                        
+    # g x x g
+
+    for i in goal_list:
+        tile_list2 = goal_list[:]
+        tile_list2.remove(i)
+        for j in non_goal_tiles:
+            tile_list3 = non_goal_tiles[:]
+            tile_list3.remove(j)
+            for k in tile_list2:
+                for l in tile_list3:
+                    start_list = (i, j, k, l)
+                    conflictadd = linear_conflicts(start_list,goal_list)
+                    if conflictadd > 0:
+                        combinations[start_list]=conflictadd     
+    
+    # x g g x
+
+    for i in non_goal_tiles:
+        tile_list2 = non_goal_tiles[:]
+        tile_list2.remove(i)
+        for j in goal_list:
+            tile_list3 = goal_list[:]
+            tile_list3.remove(j)
+            for k in tile_list3:
+                for l in tile_list2:
+                    start_list = (i, j, k, l)
+                    conflictadd = linear_conflicts(start_list,goal_list)
+                    if conflictadd > 0:
+                        combinations[start_list]=conflictadd      
+    
+    # x g x g
+    
+    for i in non_goal_tiles:
+        tile_list2 = non_goal_tiles[:]
+        tile_list2.remove(i)
+        for j in goal_list:
+            tile_list3 = goal_list[:]
+            tile_list3.remove(j)
+            for k in tile_list3:
+                for l in tile_list2:
+                    start_list = (i, j, k, l)
+                    conflictadd = linear_conflicts(start_list,goal_list)
+                    if conflictadd > 0:
+                        combinations[start_list]=conflictadd      
+      
+    # x x g g
+    
+    for i in non_goal_tiles:
+        tile_list2 = non_goal_tiles[:]
+        tile_list2.remove(i)
+        for j in tile_list2:
+            for k in goal_list:
+                tile_list3 = goal_list[:]
+                tile_list3.remove(k)
+                for l in tile_list3:
+                    start_list = (i, j, k, l)
+                    conflictadd = linear_conflicts(start_list,goal_list)
+                    if conflictadd > 0:
+                        combinations[start_list]=conflictadd      
+      
+    
+    """
 
     for i in tile_list:
         tile_list2 = tile_list[:]
@@ -279,7 +474,7 @@ def listconflicts(goal_list):
                     conflictadd = linear_conflicts(start_list,goal_list)
                     if conflictadd > 0:
                         combinations[start_list]=conflictadd
-                          
+    """                          
     return combinations
 
 
@@ -305,6 +500,7 @@ class HeuristicObj(object):
         for row in range(4):
             conf_dict = listconflicts(goal.tiles[row])
             self.row_conflicts.append(conf_dict)
+
             
         self.col_conflicts = []
         for col in range(4):
@@ -313,7 +509,7 @@ class HeuristicObj(object):
                 col_list.append(goal.tiles[row][col])
             conf_dict = listconflicts(col_list)
             self.col_conflicts.append(conf_dict)
-                
+
     def heuristic(self,start):
         """ Estimates the number of moves from start to goal  """
         
@@ -329,18 +525,18 @@ class HeuristicObj(object):
                     distance += abs(row - grow) + abs(col - gcol)
                                         
         # add linear conflicts 
-
+        
         for row in range(4):
             curr_row = tuple(start.tiles[row])
             distance += self.row_conflicts[row][curr_row]
-                
+               
         for col in range(4):
             col_list =[]
             for row in range(4):
                 col_list.append(start.tiles[row][col])
             col_tuple = tuple(col_list)
             distance += self.col_conflicts[col][col_tuple]
-            
+          
         return distance
         
 def a_star(start, goal):
@@ -517,8 +713,8 @@ start = Position([[ 9,  1,  3,  4],
 
 # two moves
 
-"""
 
+"""
 start = Position([[ 1,  2,  3,  4],
                  [ 5,  6,  7,  8],
                  [ 9, 10, 0, 12],

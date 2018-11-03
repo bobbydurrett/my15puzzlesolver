@@ -255,7 +255,8 @@ class HeuristicObj(object):
                             for frow in range(srow,-1,-1):
                                 if self.goal_lists[frow][col] == start.tiles[rrow][col]:
                                    # found crossing
-                                   distance += 2        
+                                   distance += 2  
+        
         return distance
         
 def a_star(start, goal):
@@ -432,8 +433,8 @@ start = Position([[ 9,  1,  3,  4],
 
 # two moves
 
-"""
 
+"""
 start = Position([[ 1,  2,  3,  4],
                  [ 5,  6,  7,  8],
                  [ 9, 10, 0, 12],
