@@ -3,9 +3,8 @@ Working on a 15 puzzle solver in Python for Rosetta Code:
 http://rosettacode.org/wiki/15_puzzle_solver
 
 astar.py is my A* algorithm attempt.
-It did not run fast enough to solve the Rosetta Code
-problem with 52 moves in a reasonable length of time.
-i.e. Not in the lifetime of the universe.
+stuck on about 3 seconds for a 21 move puzzle.
+not fast enough for the RC 52 move puzzle.
 
 idastar.py is my IDA* attempt. Jury is still out on
 how fast it is.
