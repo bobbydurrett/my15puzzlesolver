@@ -15,6 +15,8 @@ def linear_conflicts(start_list,goal_list):
             if start_list[s] == goal_list[g] and start_list[s] != 0:
                 # store tile number and the start and goal square number
                 tiles_with_goals.append((start_list[s], s, g))
+                
+#    print(tiles_with_goals)
             
     # find the squares that each tile in tiles_with_goals
     # would go through to get to its goal
@@ -35,7 +37,9 @@ def linear_conflicts(start_list,goal_list):
         for x in range(smaller,larger+1):
             squares.add(x)
         
-        occupied_squares.append([tile_num,squares,direction])    
+        occupied_squares.append([tile_num, squares, direction, start_square, goal_square]) 
+        
+#    print(occupied_squares)
     
     # find tiles that move through the same squares and count
     # the conflicts
@@ -43,12 +47,16 @@ def linear_conflicts(start_list,goal_list):
     conflicts = 0
     
     while len(occupied_squares) > 0:
-        tile_num, squares, direction = occupied_squares.pop()
-        # find the tiles who interest with this tile
+        tile_num, squares, direction, s, g = occupied_squares.pop()
+#        print("tile_num="+str(tile_num))
+        # find the tiles who intersect with this tile
         to_remove = []
         for o in range(len(occupied_squares)):
-            otile_num, osquares, odirection = occupied_squares[o]
-            if len(osquares&squares) > 0 and direction != odirection:
+            otile_num, osquares, odirection, os, og = occupied_squares[o]
+#            print("og="+str(og))
+#            print("s="+str(s))
+            if len(osquares&squares) > 0 and not ((os == g) and (direction == odirection)):
+#                print("otile_num="+str(otile_num))
                 conflicts += 1
                 to_remove.append(occupied_squares[o])
         for o in to_remove:
@@ -58,7 +66,7 @@ def linear_conflicts(start_list,goal_list):
      
     return 2 * conflicts
 
-# answer is 6
+print("answer is 6")
 
 start = [1, 2, 3, 4]
 goal = [4, 3, 2, 1]
@@ -66,7 +74,7 @@ print(start)
 print(goal)
 print(linear_conflicts(start,goal))
 
-# answer is 4
+print("answer is 4")
 
 start = [1, 2, 3, 5]
 goal = [4, 3, 2, 1]
@@ -74,7 +82,7 @@ print(start)
 print(goal)
 print(linear_conflicts(start,goal))
 
-# answer is 2
+print("answer is 2")
 
 start = [7, 2, 3, 5]
 goal = [4, 3, 2, 1]
@@ -82,10 +90,90 @@ print(start)
 print(goal)
 print(linear_conflicts(start,goal))
 
-# answer is 0
+print("answer is 0")
 
 start = [13, 0, 14, 15]
 goal = [13, 14, 15, 0]
+print(start)
+print(goal)
+print(linear_conflicts(start,goal))
+
+print("answer is 2")
+
+start = [1, 2, 3, 4]
+goal = [2, 1, 5, 6]
+print(start)
+print(goal)
+print(linear_conflicts(start,goal))
+
+print("answer is 0")
+
+start = [1, 2, 3, 4]
+goal = [1, 2, 5, 6]
+print(start)
+print(goal)
+print(linear_conflicts(start,goal))
+
+print("answer is 0")
+
+start = [1, 3, 4, 2]
+goal = [1, 2, 5, 6]
+print(start)
+print(goal)
+print(linear_conflicts(start,goal))
+
+print("answer is 0")
+
+start = [9, 1, 2, 3]
+goal = [1, 2, 3, 8]
+print(start)
+print(goal)
+print(linear_conflicts(start,goal))
+
+print("answer is 0")
+
+start = [1, 8, 9, 7]
+goal = [2, 3, 4, 1]
+print(start)
+print(goal)
+print(linear_conflicts(start,goal))
+
+print("answer is 2")
+
+start = [1, 2, 9, 7]
+goal = [2, 1, 4, 5]
+print(start)
+print(goal)
+print(linear_conflicts(start,goal))
+
+print("answer is 2")
+
+start = [1, 9, 2, 7]
+goal = [2, 1, 4, 5]
+print(start)
+print(goal)
+print(linear_conflicts(start,goal))
+
+print("answer is 2")
+
+start = [1, 9, 7, 2]
+goal = [2, 1, 4, 5]
+print(start)
+print(goal)
+print(linear_conflicts(start,goal))
+
+print("answer is 4")
+
+start = [1, 9, 7, 2]
+goal = [2, 7, 9, 5]
+print(start)
+print(goal)
+print(linear_conflicts(start,goal))
+
+print("answer is 4")
+
+start = [1, 9, 7, 2]
+goal = [5, 2, 7, 9]
 print(start)
 print(goal)
 print(linear_conflicts(start,goal))
