@@ -6,10 +6,11 @@ start and goal position.
 """
 
 from astar import *
+import time
 
 # Rosetta Code start position
 
-"""
+""""
 start = Position([[ 15, 14,  1,  6],
                   [ 9, 11,  4, 12],
                   [ 0, 10,  7,  3],
@@ -24,8 +25,8 @@ start = Position([[ 0,  1,  3,  4],
                  [  9,  5,  2,  8],
                  [  6, 10, 12,  7],
                  [ 13, 14, 11, 15]])
-"""
 
+"""
 
 # 21 moves
 
@@ -73,11 +74,11 @@ goal = Position([[ 1,  2,  3,  4],
                  
 
 
-
+before = time.perf_counter()
 
 result = a_star(start,goal)
-#result = a_star(start,goal,manhattan_distance)
 
+after = time.perf_counter()
 
 print("printing results")
 
@@ -87,27 +88,7 @@ for r in result:
 print(path_as_0_moves(result))
 
 
-#print(manhattan_distance(start,goal))
-#print(linear_conflicts(start,goal))
+print(" ")
+print("Run time in seconds: "+str(after - before))
 
-"""
-print(start)
 
-n = start.neighbors()
-
-for p in n:
-    print(p)
-"""
-
-#do_test(goal,7)
-"""
-q = PriorityQueue([1,2,3])
-print(q.pop())
-print(q.isinqueue(1))
-q.push(33)
-q.heapify()
-"""
-
-#hob = HeuristicObj(goal)
-
-#print(hob.heuristic(start))
