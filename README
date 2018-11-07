@@ -6,5 +6,9 @@ astar.py is my A* algorithm attempt.
 stuck on about 3 seconds for a 21 move puzzle.
 not fast enough for the RC 52 move puzzle.
 
-idastar.py is my IDA* attempt. Jury is still out on
-how fast it is.
+seems to hit 2 gigabyte limit on 30 move puzzle.
+Could try 64 bit python to use more memory
+or try optimizing memory usage.
+
+idastar.py is my IDA* attempt. This is on the 
+back burner while I'm working on my A* version.
