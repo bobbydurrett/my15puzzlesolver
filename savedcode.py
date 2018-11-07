@@ -1,4 +1,9 @@
 """
+I'm planning to clean out the testing code from astar.py so I have made
+savedcode.py as a copy of astar before I started. Eventually I will
+delete this after I build test scripts that include the code here
+or otherwise decide I don't need this code.
+
 
 Python example for this Rosetta Code task:
 
@@ -66,7 +71,7 @@ class Position(object):
         # :nodoc: Delegate comparison to distance.
         return (self.fscore >= other.fscore)
         
-    def tiles_match(self, other):
+    def tiles_match(self,other):
         # compare two sets of tile positions
         return (self.tiles == other.tiles)
     
@@ -154,10 +159,6 @@ class Position(object):
         return str(self.tiles[0])+'\n'+str(self.tiles[1])+'\n'+str(self.tiles[2])+'\n'+str(self.tiles[3])+'\n'
                 
 def reconstruct_path(current):
-    """ 
-    Uses the cameFrom members to follow the chain of moves backwards
-    and then reverses the list to get the path in the correct order.
-    """
     total_path = [current]
     while current.cameFrom != None:
         current = current.cameFrom
@@ -171,32 +172,26 @@ class PriorityQueue(object):
     """Priority queue with set for fast in calculations """
 
     def __init__(self, object_list):
-        """ save a list in a set and a heap based priority queue"""
         self.qset = set(object_list)
         self.qheap = object_list
         heapq.heapify(self.qheap)
         
     def push(self, new_object):
-        """ save object in heap and set """
         heapq.heappush(self.qheap,new_object)
         self.qset.add(new_object)
         
     def pop(self):
-        """ remove object from heap and set and return """
         popped_object = heapq.heappop(self.qheap)
         self.qset.remove(popped_object)
         return popped_object
         
     def isinqueue(self,checked_object):
-        """ check set for object """
         return checked_object in self.qset
         
     def heapify(self):
-        """ reorg the heap if priorities updated or new list """
         heapq.heapify(self.qheap)
         
     def nummembers(self):
-        """ get num objects from set size """
         return len(self.qset)
         
 def linear_conflicts(start_list,goal_list):
@@ -265,10 +260,6 @@ def linear_conflicts(start_list,goal_list):
     return 2 * conflicts
     
 class lcmap(dict):
-    """ 
-    Lets you return 0 if you look for an object that
-    is not in the dictionary. 
-    """
     def __missing__(self, key):
         return 0
 
@@ -471,6 +462,24 @@ def listconflicts(goal_list):
                     if conflictadd > 0:
                         combinations[start_list]=conflictadd      
       
+    
+    """
+
+    for i in tile_list:
+        tile_list2 = tile_list[:]
+        tile_list2.remove(i)
+        for j in tile_list2:
+            tile_list3 = tile_list2[:]
+            tile_list3.remove(j)
+            for k in tile_list3:
+                tile_list4 = tile_list3[:]
+                tile_list4.remove(k)
+                for l in tile_list4:
+                    start_list = (i, j, k, l)
+                    conflictadd = linear_conflicts(start_list,goal_list)
+                    if conflictadd > 0:
+                        combinations[start_list]=conflictadd
+    """                          
     return combinations
 
 
@@ -478,10 +487,6 @@ class HeuristicObj(object):
     """ Object used to preprocess goal position for heuristic function """
 
     def __init__(self, goal):
-        """
-        Preprocess goal position to setup internal data structures
-        that can be used to speed up heuristic.
-        """
         self.goal_map = []
         for i in range(16):
             self.goal_map.append(i)    
@@ -495,7 +500,14 @@ class HeuristicObj(object):
                 self.goal_map[goal.tiles[row][col]] = (row, col)
                 
         # preprocess for linear conflicts
-                    
+        
+        """
+        self.row_conflicts = []
+        for row in range(4):
+            conf_dict = listconflicts(goal.tiles[row])
+            self.row_conflicts.append(conf_dict)
+        """
+            
         self.col_conflicts = []
         for col in range(4):
             col_list =[]
@@ -504,13 +516,8 @@ class HeuristicObj(object):
             conf_dict = listconflicts(col_list)
             self.col_conflicts.append(conf_dict)
 
-    def heuristic(self, start):
-        """ 
-        
-        Estimates the number of moves from start to goal.
-        The goal was preprocessed in __init__.
-        
-        """
+    def heuristic(self,start):
+        """ Estimates the number of moves from start to goal  """
         
         distance = 0
         
@@ -524,7 +531,11 @@ class HeuristicObj(object):
                     distance += abs(row - grow) + abs(col - gcol)
                                         
         # add linear conflicts 
-
+        """
+        for row in range(4):
+            curr_row = tuple(start.tiles[row])
+            distance += self.row_conflicts[row][curr_row]
+        """       
         for col in range(4):
             col_list =[]
             for row in range(4):
@@ -542,7 +553,6 @@ def a_star(start, goal):
     hob = HeuristicObj(goal)
     
     # The set of nodes already evaluated
-    
     closedSet = set()
 
     # The set of currently discovered nodes that are not evaluated yet.
@@ -553,7 +563,6 @@ def a_star(start, goal):
     openSet = PriorityQueue([start])
  
     # The cost of going from start to start is zero.
-    
     start.gscore = 0
     
     while openSet.nummembers() > 0:
@@ -576,23 +585,208 @@ def a_star(start, goal):
                 neighbor.gscore = tentative_gScore
                 neighbor.fscore = neighbor.gscore + hob.heuristic(neighbor)
                 openSet.push(neighbor)
-            elif tentative_gScore < neighbor.gscore: # I am not sure that this is ever true
+            elif tentative_gScore < neighbor.gscore:
                 neighbor.cameFrom = current
                 neighbor.gscore = tentative_gScore
                 neighbor.fscore = neighbor.gscore + hob.heuristic(neighbor)
                 openSet.heapify()
                 
 def path_as_0_moves(path):
-    """
-    Takes the path which is a list of Position
-    objects and outputs it as a string of rlud 
-    directions to match output desired by 
-    Rosetta Code task.
-    """
     strpath = ""
     for p in path:
         if p.directiontomoveto != None:
             strpath += p.directiontomoveto
         
     return strpath
+    
+
+def do_move(goal,direction):
+    """
+    board is 4x4 list of lists with
+    0,0 as top left.
+    
+    board[y][x]
+    
+    direction is r,l,u,d
+    
+    returns updated board
+    """
+    
+    board = goal.copy_tiles()
+
+    # find 0 - blank square
+    
+    x0 = None
+    y0 = None
+    
+    for i in range(4):
+        for j in range(4):
+            if board[i][j] == 0:
+                y0 = i
+                x0 = j
+                
+    if x0 == None or y0 == None:
+        return goal
         
+    if direction == 'r':
+        # move 0 to the right
+        if x0 < 3:
+            temp = board[y0][x0+1]
+            board[y0][x0+1] = 0
+            board[y0][x0] = temp
+    elif direction == 'l':
+        # move 0 to the left
+        if x0 > 0:
+            temp = board[y0][x0-1]
+            board[y0][x0-1] = 0
+            board[y0][x0] = temp
+    elif direction == 'u':
+        # move 0 up
+        if y0 > 0:
+            temp = board[y0-1][x0]
+            board[y0-1][x0] = 0
+            board[y0][x0] = temp
+    elif direction == 'd':
+        # move 0 down
+        if y0 < 3:
+            temp = board[y0+1][x0]
+            board[y0+1][x0] = 0
+            board[y0][x0] = temp
+    else:
+        print("Bad direction: "+direction)
+    
+    return Position(board)
+    
+def test_solver(goal,path_length,start,path_left):
+    """
+    Try's every path of length path_length testing solver.
+    
+    top level call is just goal, path_length, goal, path_length
+    
+    last two change with recursive calls.
+    
+    """
+    
+    if path_left <= 0:
+        result = a_star(start,goal)
+        if len(result) - 1 > path_length:
+            print(str(len(result) - 1)+" is more than "+str(path_length))
+            print(start)
+        
+    else:
+        new_start = do_move(start,'r')
+        test_solver(goal,path_length,new_start,path_left-1)
+        new_start = do_move(start,'l')
+        test_solver(goal,path_length,new_start,path_left-1)
+        new_start = do_move(start,'u')
+        test_solver(goal,path_length,new_start,path_left-1)
+        new_start = do_move(start,'d')
+        test_solver(goal,path_length,new_start,path_left-1)
+        
+def do_test(goal,path_length):        
+    test_solver(goal,path_length,goal,path_length)
+    
+# Rosetta Code start position
+
+"""
+start = Position([[ 15, 14,  1,  6],
+                  [ 9, 11,  4, 12],
+                  [ 0, 10,  7,  3],
+                  [13,  8,  5,  2]])
+"""
+
+# 20 moves
+
+
+"""
+start = Position([[ 0,  1,  3,  4],
+                 [  9,  5,  2,  8],
+                 [  6, 10, 12,  7],
+                 [ 13, 14, 11, 15]])
+"""
+
+
+# 21 moves
+
+
+
+start = Position([[ 9,  1,  3,  4],
+                 [  0,  5,  2,  8],
+                 [  6, 10, 12,  7],
+                 [ 13, 14, 11, 15]])
+
+
+
+# two moves
+
+
+"""
+start = Position([[ 1,  2,  3,  4],
+                 [ 5,  6,  7,  8],
+                 [ 9, 10, 0, 12],
+                 [13, 14, 11,  15]])
+"""
+
+# one move
+
+"""
+start = Position([[ 1,  2,  3,  4],
+                 [ 5,  6,  7,  8],
+                 [ 9, 10, 11, 12],
+                 [13, 14, 0,  15]])
+"""
+
+# two linear conflicts
+
+"""
+start = Position([[ 1,  2,  3,  4],
+                 [ 9,  6,  7,  8],
+                 [ 5, 11, 10, 12],
+                 [13, 14, 15,  0]])
+"""
+
+goal = Position([[ 1,  2,  3,  4],
+                 [ 5,  6,  7,  8],
+                 [ 9, 10, 11, 12],
+                 [13, 14, 15,  0]])
+                 
+
+
+
+
+result = a_star(start,goal)
+#result = a_star(start,goal,manhattan_distance)
+
+
+print("printing results")
+
+for r in result:
+    print(r)
+    
+print(path_as_0_moves(result))
+
+
+#print(manhattan_distance(start,goal))
+#print(linear_conflicts(start,goal))
+
+"""
+print(start)
+
+n = start.neighbors()
+
+for p in n:
+    print(p)
+"""
+
+#do_test(goal,7)
+"""
+q = PriorityQueue([1,2,3])
+print(q.pop())
+print(q.isinqueue(1))
+q.push(33)
+q.heapify()
+"""
+
+#hob = HeuristicObj(goal)
+
+#print(hob.heuristic(start))
