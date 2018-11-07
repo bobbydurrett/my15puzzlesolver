@@ -13,5 +13,9 @@ or try optimizing memory usage.
 seems to hit the 2 gig limit at about 1.6 million 
 positions examined.
 
+postest.py - created list of 5 million positions
+in 2 gig of memory. Need to test inserting
+this many in the priority queue.
+
 idastar.py is my IDA* attempt. This is on the 
 back burner while I'm working on my A* version.
