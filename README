@@ -10,5 +10,8 @@ seems to hit 2 gigabyte limit on 30 move puzzle.
 Could try 64 bit python to use more memory
 or try optimizing memory usage.
 
+seems to hit the 2 gig limit at about 1.6 million 
+positions examined.
+
 idastar.py is my IDA* attempt. This is on the 
 back burner while I'm working on my A* version.

@@ -556,8 +556,14 @@ def a_star(start, goal):
     
     start.gscore = 0
     
+    num_popped = 0
+    
     while openSet.nummembers() > 0:
         current = openSet.pop()
+        num_popped += 1
+        if num_popped % 100000 == 0:
+            print(str(num_popped)+" positions examined")
+        
         if current.tiles_match(goal):
             return reconstruct_path(current)
             
