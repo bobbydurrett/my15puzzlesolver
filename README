@@ -39,3 +39,20 @@ ddluuuldlurrdrdlllurrrullddrdr
 
 Run time in seconds: 168.38073773099998
 
+Blew up at about 8 gig memory on RC example:
+
+19100000 positions examined
+19200000 positions examined
+19300000 positions examined
+19400000 positions examined
+19500000 positions examined
+19600000 positions examined
+Traceback (most recent call last):
+  File "C:\bobby\15puzzlesolver\my15puzzlesolver\testone.py", line 87, in <module>
+  File "C:\bobby\15puzzlesolver\my15puzzlesolver\astar.py", line 572, in a_star
+  File "C:\bobby\15puzzlesolver\my15puzzlesolver\astar.py", line 136, in neighbors
+  File "C:\bobby\15puzzlesolver\my15puzzlesolver\astar.py", line 36, in __init__
+MemoryError
+
+over 19 million nodes.
+
