@@ -56,3 +56,13 @@ MemoryError
 
 over 19 million nodes.
 
+Updated postest.py to include priority queue pushes.
+
+Number of positions to create? 5000000
+
+5000000 successfully created.
+
+Run time in seconds: 29.045173822000002
+
+29 seconds to push and create 5,000,000 positions.
+
