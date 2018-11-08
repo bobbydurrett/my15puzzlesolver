@@ -19,3 +19,23 @@ this many in the priority queue.
 
 idastar.py is my IDA* attempt. This is on the 
 back burner while I'm working on my A* version.
+
+Got the 30 move puzzle to run with 64 bit windows
+version of Python 3.7.1
+
+1700000 positions examined
+1800000 positions examined
+1900000 positions examined
+2000000 positions examined
+2100000 positions examined
+2200000 positions examined
+2300000 positions examined
+
+Path length = 30
+
+Path using rlud:
+
+ddluuuldlurrdrdlllurrrullddrdr
+
+Run time in seconds: 168.38073773099998
+
