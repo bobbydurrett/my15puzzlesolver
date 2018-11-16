@@ -67,3 +67,10 @@ Run time in seconds: 29.045173822000002
 29 seconds to push and create 5,000,000 positions.
 
 started intpos.py
+
+did quick heuristics test htest.py.
+
+code golf example had 43 for 52 move position and mine had 38.
+
+Both had 13 for 21 move position.
+
