@@ -3,7 +3,7 @@ from astar import *
 # Rosetta Code start position
 
 """
-start = Position([[ 15, 14,  1,  6],
+start = Position([[15, 14,  1,  6],
                   [ 9, 11,  4, 12],
                   [ 0, 10,  7,  3],
                   [13,  8,  5,  2]])

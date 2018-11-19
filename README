@@ -122,3 +122,27 @@ Traceback (most recent call last):
     heapq.heappush(self.qheap,new_object)
 MemoryError
 
+Checked code golf version:
+
+before walking distance d=2
+after walking distance d=42
+before walking distance d=2
+
+Looks like walking distance (manhattan distance) = 40 for
+RC start position.
+
+Also it seems to do both x and y direction linear conflicts.
+
+mine has manhattan distance 36.
+
+C:\todoitems\rosettacode\15puzzlesolver\my15puzzlesolver>htest.py
+manhattan distance = 36
+with linear conflicts distance = 38
+38
+
+Looks like difference is that it includes 0
+
+tried changing my heuristic but then for 21 heuristic is 18.
+
+Not sure if including 0 is right.
+
