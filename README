@@ -146,3 +146,11 @@ tried changing my heuristic but then for 21 heuristic is 18.
 
 Not sure if including 0 is right.
 
+Next step is to change position to use intpos approach.
+
+May not solve entire problem but it does use less 
+memory.
+
+need to finish intpos.py and unit test each function.
+
+
