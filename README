@@ -74,3 +74,26 @@ code golf example had 43 for 52 move position and mine had 38.
 
 Both had 13 for 21 move position.
 
+tested using intpos.py instead of list of lists position:
+
+C:\todoitems\rosettacode\15puzzlesolver\my15puzzlesolver>postest.py
+
+Number of positions to create? 5000000
+
+5000000 successfully created.
+
+Run time in seconds: 24.96709779
+
+Hit enter to continue:
+
+C:\todoitems\rosettacode\15puzzlesolver\my15puzzlesolver>intpostest.py
+
+Number of positions to create? 5000000
+
+5000000 successfully created.
+
+Run time in seconds: 10.893528313000001
+
+Hit enter to continue:
+
+11 seconds instead of 25 to load 5 million positions in the queue.
