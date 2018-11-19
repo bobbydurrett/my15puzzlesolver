@@ -1,3 +1,7 @@
+# Hopefully this is larger than any fscore or gscore
+
+integer_infinity = 1000000000
+
 class Position(object):
     """Position class represents one position of a 15 puzzle"""
 
