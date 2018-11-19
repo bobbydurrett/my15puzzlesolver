@@ -97,3 +97,28 @@ Run time in seconds: 10.893528313000001
 Hit enter to continue:
 
 11 seconds instead of 25 to load 5 million positions in the queue.
+
+Did 12 million in 26 seconds.
+
+C:\todoitems\rosettacode\15puzzlesolver\my15puzzlesolver>intpostest.py
+
+Number of positions to create? 12000000
+
+12000000 successfully created.
+
+Run time in seconds: 26.476382996999998
+
+Hit enter to continue:
+
+So, I guess intpos.py takes less memory than the list based version.
+
+C:\todoitems\rosettacode\15puzzlesolver\my15puzzlesolver>postest.py
+
+Number of positions to create? 12000000
+Traceback (most recent call last):
+  File "C:\todoitems\rosettacode\15puzzlesolver\my15puzzlesolver\postest.py", line 23, in <module>
+    [13,  8,  5,  2]]))
+  File "C:\todoitems\rosettacode\15puzzlesolver\my15puzzlesolver\astar.py", line 181, in push
+    heapq.heappush(self.qheap,new_object)
+MemoryError
+
