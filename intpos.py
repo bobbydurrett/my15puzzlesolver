@@ -127,34 +127,30 @@ class Position(object):
             temp = new_position.get_tile(y0,x0+1)
             new_position.set_tile(y0,x0+1,0)
             new_position.set_tile(y0,x0,temp)
-            new_position = Position(new_tiles)
             new_position.directiontomoveto = 'r'
             neighbor_list.append(new_position)
         # move 0 to the left
         if x0 > 0:
-            new_tiles = self.copy_tiles()
-            temp = new_tiles[y0][x0-1]
-            new_tiles[y0][x0-1] = 0
-            new_tiles[y0][x0] = temp
-            new_position = Position(new_tiles)
+            new_position = Position(self.tiles)
+            temp = new_position.get_tile(y0,x0-1)
+            new_position.set_tile(y0,x0-1,0)
+            new_position.set_tile(y0,x0,temp)
             new_position.directiontomoveto = 'l'
             neighbor_list.append(new_position)
         # move 0 up
         if y0 > 0:
-            new_tiles = self.copy_tiles()
-            temp = new_tiles[y0-1][x0]
-            new_tiles[y0-1][x0] = 0
-            new_tiles[y0][x0] = temp
-            new_position = Position(new_tiles)
+            new_position = Position(self.tiles)
+            temp = new_position.get_tile(y0-1,x0)
+            new_position.set_tile(y0-1,x0,0)
+            new_position.set_tile(y0,x0,temp)
             new_position.directiontomoveto = 'u'
             neighbor_list.append(new_position)
         # move 0 down
         if y0 < 3:
-            new_tiles = self.copy_tiles()
-            temp = new_tiles[y0+1][x0]
-            new_tiles[y0+1][x0] = 0
-            new_tiles[y0][x0] = temp
-            new_position = Position(new_tiles)
+            new_position = Position(self.tiles)
+            temp = new_position.get_tile(y0+1,x0)
+            new_position.set_tile(y0+1,x0,0)
+            new_position.set_tile(y0,x0,temp)
             new_position.directiontomoveto = 'd'
             neighbor_list.append(new_position)
             
@@ -162,5 +158,12 @@ class Position(object):
         
     def __repr__(self):
         # printable version of self
+        output = ""
+        for row in range(4):
+            curr_row = ""
+            for column in range(4):
+                curr_tile = str(self.get_tile(row, column))
+                curr_row += curr_tile + " "
+            output += curr_row + "\n"
         
-        return str(self.tiles[0])+'\n'+str(self.tiles[1])+'\n'+str(self.tiles[2])+'\n'+str(self.tiles[3])+'\n'
+        return output

@@ -31,3 +31,11 @@ p.set_tile(3,3,7)
 
 print(str(p.get_tile(3,3)))
 
+print(" ")
+
+print(str(p))
+
+n = p.neighbors()
+
+for e in n:
+    print(str(e))

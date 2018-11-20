@@ -153,4 +153,22 @@ memory.
 
 need to finish intpos.py and unit test each function.
 
+updated intastar.py to use intpos.py 
+
+It is slower than with the list of lists version for some reason
+but uses a lot less memory. This is with 32 bit python:
+
+1900000 positions examined
+2000000 positions examined
+2100000 positions examined
+2200000 positions examined
+2300000 positions examined
+
+Path length = 30
+
+Path using rlud:
+
+ddluuuldlurrdrdlllurrrullddrdr
+
+Run time in seconds: 314.350291496
 

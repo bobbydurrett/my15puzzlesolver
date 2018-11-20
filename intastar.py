@@ -94,11 +94,26 @@ class Position(object):
         0,0 is the top left.
         """
         
-        after_shift = self.tiles >> ((row * 16) + (column * 4))
+        after_shift = self.tiles >> (((3 - row) * 16) + ((3 - column) * 4))
         after_mask = after_shift & 15
         
         return after_mask
         
+    def set_tile(self, row, column, tile_number):
+        """ 
+        sets the tile number for the
+        given row and column where
+        0,0 is the top left.
+        """
+        
+        current_tile = self.get_tile(row, column)
+        
+        bits_to_shift = (((3 - row) * 16) + ((3 - column) * 4))
+        new_mask = tile_number << bits_to_shift
+        old_mask = current_tile << bits_to_shift
+        self.tiles = self.tiles ^ old_mask
+        self.tiles = self.tiles ^ new_mask
+
     def neighbors(self):
         """
         returns a list of neighbors
@@ -106,11 +121,6 @@ class Position(object):
         directiontomoveto set to the direction that the
         empty square moved.
         
-        tiles is 4x4 list of lists with
-        0,0 as top left.
-    
-        tiles[y][x]
-
         """
         
         # find 0 - blank square
@@ -120,7 +130,7 @@ class Position(object):
         
         for i in range(4):
             for j in range(4):
-                if self.tiles[i][j] == 0:
+                if self.get_tile(i,j) == 0:
                     y0 = i
                     x0 = j
 
@@ -131,38 +141,34 @@ class Position(object):
             
         # move 0 to the right
         if x0 < 3:
-            new_tiles = self.copy_tiles()
-            temp = new_tiles[y0][x0+1]
-            new_tiles[y0][x0+1] = 0
-            new_tiles[y0][x0] = temp
-            new_position = Position(new_tiles)
+            new_position = Position(self.tiles)
+            temp = new_position.get_tile(y0,x0+1)
+            new_position.set_tile(y0,x0+1,0)
+            new_position.set_tile(y0,x0,temp)
             new_position.directiontomoveto = 'r'
             neighbor_list.append(new_position)
         # move 0 to the left
         if x0 > 0:
-            new_tiles = self.copy_tiles()
-            temp = new_tiles[y0][x0-1]
-            new_tiles[y0][x0-1] = 0
-            new_tiles[y0][x0] = temp
-            new_position = Position(new_tiles)
+            new_position = Position(self.tiles)
+            temp = new_position.get_tile(y0,x0-1)
+            new_position.set_tile(y0,x0-1,0)
+            new_position.set_tile(y0,x0,temp)
             new_position.directiontomoveto = 'l'
             neighbor_list.append(new_position)
         # move 0 up
         if y0 > 0:
-            new_tiles = self.copy_tiles()
-            temp = new_tiles[y0-1][x0]
-            new_tiles[y0-1][x0] = 0
-            new_tiles[y0][x0] = temp
-            new_position = Position(new_tiles)
+            new_position = Position(self.tiles)
+            temp = new_position.get_tile(y0-1,x0)
+            new_position.set_tile(y0-1,x0,0)
+            new_position.set_tile(y0,x0,temp)
             new_position.directiontomoveto = 'u'
             neighbor_list.append(new_position)
         # move 0 down
         if y0 < 3:
-            new_tiles = self.copy_tiles()
-            temp = new_tiles[y0+1][x0]
-            new_tiles[y0+1][x0] = 0
-            new_tiles[y0][x0] = temp
-            new_position = Position(new_tiles)
+            new_position = Position(self.tiles)
+            temp = new_position.get_tile(y0+1,x0)
+            new_position.set_tile(y0+1,x0,0)
+            new_position.set_tile(y0,x0,temp)
             new_position.directiontomoveto = 'd'
             neighbor_list.append(new_position)
             
@@ -170,9 +176,16 @@ class Position(object):
         
     def __repr__(self):
         # printable version of self
+        output = ""
+        for row in range(4):
+            curr_row = ""
+            for column in range(4):
+                curr_tile = str(self.get_tile(row, column))
+                curr_row += curr_tile + " "
+            output += curr_row + "\n"
         
-        return str(self.tiles[0])+'\n'+str(self.tiles[1])+'\n'+str(self.tiles[2])+'\n'+str(self.tiles[3])+'\n'
-                
+        return output
+        
 def reconstruct_path(current):
     """ 
     Uses the cameFrom members to follow the chain of moves backwards
@@ -506,13 +519,11 @@ class HeuristicObj(object):
         for i in range(16):
             self.goal_map.append(i)    
         
-        self.goal_lists = goal.tiles
-        
         # preprocess for manhattan distance
         
         for row in range(4):
             for col in range(4):
-                self.goal_map[goal.tiles[row][col]] = (row, col)
+                self.goal_map[goal.get_tile(row, col)] = (row, col)
                 
         # preprocess for linear conflicts
                     
@@ -520,7 +531,7 @@ class HeuristicObj(object):
         for col in range(4):
             col_list =[]
             for row in range(4):
-                col_list.append(goal.tiles[row][col])
+                col_list.append(goal.get_tile(row, col))
             conf_dict = listconflicts(col_list)
             self.col_conflicts.append(conf_dict)
 
@@ -538,7 +549,7 @@ class HeuristicObj(object):
         
         for row in range(4):
             for col in range(4):
-                start_tilenum = start.tiles[row][col]
+                start_tilenum = start.get_tile(row, col)
                 if start_tilenum != 0:
                     (grow, gcol) = self.goal_map[start_tilenum]
                     distance += abs(row - grow) + abs(col - gcol)
@@ -548,7 +559,7 @@ class HeuristicObj(object):
         for col in range(4):
             col_list =[]
             for row in range(4):
-                col_list.append(start.tiles[row][col])
+                col_list.append(start.get_tile(row, col))
             col_tuple = tuple(col_list)
             distance += self.col_conflicts[col][col_tuple]
           

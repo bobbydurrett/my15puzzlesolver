@@ -32,11 +32,7 @@ start = Position([[ 0,  1,  3,  4],
 
 
 """
-start = Position([[ 9,  1,  3,  4],
-                 [  0,  5,  2,  8],
-                 [  6, 10, 12,  7],
-                 [ 13, 14, 11, 15]])
-
+start = Position(0x913405286ac7debf)
 """
 
 # two moves
@@ -51,8 +47,9 @@ start = Position([[ 1,  2,  3,  4],
 
 # one move
 
-
+"""
 start = Position(0x123456789abcde0f)
+"""
 
 # two linear conflicts
 
@@ -65,12 +62,8 @@ start = Position([[ 1,  2,  3,  4],
 
 # 30 moves
 
-"""
-start = Position([[ 9,  3,  4,  8],
-                 [  5,  1, 12,  0],
-                 [  6, 10, 11,  2],
-                 [ 13, 14, 15,  7]])
-"""
+
+start = Position(0x934851c06ab2def7)
 
 goal = Position(0x123456789abcdef0)                 
 
