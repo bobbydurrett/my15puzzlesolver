@@ -176,4 +176,5 @@ python -m cProfile -s cumtime inttestone.py > cumtimeprofile.txt
 
 python -m cProfile -s time inttestone.py > timeprofile.txt
 
+Maybe try converting astar.py to use tuples where possible?
 
