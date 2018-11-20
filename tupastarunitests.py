@@ -81,5 +81,32 @@ print(q.qset)
 print("qheap")
 print(q.qheap)
 
+q.heapify()
+while q.nummembers() > 0:
+    e = q.pop()
+    print(e.fscore)
+    print(e)
+
+print(q.isinqueue(xp))
+q.push(xp)
+print(q.isinqueue(xp))
+
+print(linear_conflicts((1,2,3,0),(1,2,3,0)))
+
+print(linear_conflicts((4,5,6,0),(1,2,3,0)))
+
+print(linear_conflicts((3,2,1,0),(1,2,3,0)))
+
+print(linear_conflicts((1,2,3,4),(4,3,2,1)))
+
+d = lcmap()
+d["a"]=5
+print(d["b"])
+print(d["a"])
+
+lc = listconflicts([1,2,3,0])
+print(lc)
+
+
 
 

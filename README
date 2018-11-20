@@ -200,3 +200,19 @@ Messing with __eq__ made a huge difference.
 Need to check priority queue and set implementation.
 
 also astar logic.
+
+tupastar.py much faster:
+
+C:\todoitems\rosettacode\15puzzlesolver\my15puzzlesolver>tuptestone.py
+
+Path length = 32
+
+Path using rlud:
+
+ddluurdluuldlurrddllurrrullddrdr
+
+Run time in seconds: 3.5671636529999997
+
+Funny that it found a 32 length path instead of 30.
+
+doing unit testing.
