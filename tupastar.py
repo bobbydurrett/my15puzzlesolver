@@ -520,7 +520,13 @@ class HeuristicObj(object):
                 self.goal_map[goal.tiles[row][col]] = (row, col)
                 
         # preprocess for linear conflicts
-                    
+        
+        self.row_conflicts = []
+        for row in range(4):
+            t = goal.tiles[row]
+            conf_dict = listconflicts([t[0],t[1],t[2],t[3]])
+            self.row_conflicts.append(conf_dict)
+            
         self.col_conflicts = []
         for col in range(4):
             col_list =[]
@@ -549,6 +555,10 @@ class HeuristicObj(object):
                     distance += abs(row - grow) + abs(col - gcol)
                                         
         # add linear conflicts 
+
+        for row in range(4):
+            curr_row = start.tiles[row]
+            distance += self.row_conflicts[row][curr_row]
 
         for col in range(4):
             col_list =[]

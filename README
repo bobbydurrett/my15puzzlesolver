@@ -216,3 +216,24 @@ Run time in seconds: 3.5671636529999997
 Funny that it found a 32 length path instead of 30.
 
 doing unit testing.
+
+savedcode.py has the old row conflicts code.
+consider adding back in. Can row and column conflicts 
+duplicate each other? Need to carefully test
+heuristic against actual path.
+
+Also need path checker for results.
+
+With rows added back to linear conflicts 30 is even faster:
+
+C:\todoitems\rosettacode\15puzzlesolver\my15puzzlesolver>tuptestone.py
+
+Path length = 32
+
+Path using rlud:
+
+ddluurdlurulldlurrddllurrulddrdr
+
+Run time in seconds: 1.697198378
+
+

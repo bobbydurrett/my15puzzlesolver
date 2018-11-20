@@ -104,9 +104,28 @@ d["a"]=5
 print(d["b"])
 print(d["a"])
 
-lc = listconflicts([1,2,3,0])
-print(lc)
+"""
+lc = listconflicts([1,2,3,4])
+for c in lc:
+    print(str(c)+":"+str(lc[c]))
+"""
+
+print("heuristics")
+
+goal = Position((( 1,  2,  3,  4),
+                 ( 5,  6,  7,  8),
+                 ( 9, 10, 11, 12),
+                 (13, 14, 15,  0)))
+
+hob = HeuristicObj(goal)
+
+print(hob.heuristic(goal))
+
+moves30 = Position([[ 9,  3,  4,  8],
+                 [  5,  1, 12,  0],
+                 [  6, 10, 11,  2],
+                 [ 13, 14, 15,  7]])
 
 
-
+print(hob.heuristic(moves30))
 
