@@ -172,3 +172,8 @@ ddluuuldlurrdrdlllurrrullddrdr
 
 Run time in seconds: 314.350291496
 
+python -m cProfile -s cumtime inttestone.py > cumtimeprofile.txt
+
+python -m cProfile -s time inttestone.py > timeprofile.txt
+
+

@@ -31,9 +31,9 @@ start = Position([[ 0,  1,  3,  4],
 # 21 moves
 
 
-"""
+
 start = Position(0x913405286ac7debf)
-"""
+
 
 # two moves
 
@@ -62,8 +62,9 @@ start = Position([[ 1,  2,  3,  4],
 
 # 30 moves
 
-
+"""
 start = Position(0x934851c06ab2def7)
+"""
 
 goal = Position(0x123456789abcdef0)                 
 

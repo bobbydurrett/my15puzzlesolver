@@ -68,6 +68,10 @@ class Position(object):
         """ returns int representation of tiles """
         
         return self.tiles
+
+    # speed up get_tile and set_tile by pre-calculating bit shifts
+        
+    tile_offsets = [[60, 56, 52, 48], [44, 40, 36, 32], [28, 24, 20, 16], [12, 8, 4, 0]]
         
     def get_tile(self, row, column):
         """ 
@@ -76,7 +80,7 @@ class Position(object):
         0,0 is the top left.
         """
         
-        after_shift = self.tiles >> (((3 - row) * 16) + ((3 - column) * 4))
+        after_shift = self.tiles >> tile_offsets[row][column]
         after_mask = after_shift & 15
         
         return after_mask
@@ -90,7 +94,7 @@ class Position(object):
         
         current_tile = self.get_tile(row, column)
         
-        bits_to_shift = (((3 - row) * 16) + ((3 - column) * 4))
+        bits_to_shift = tile_offsets[row][column]
         new_mask = tile_number << bits_to_shift
         old_mask = current_tile << bits_to_shift
         self.tiles = self.tiles ^ old_mask
