@@ -10,12 +10,12 @@ import time
 
 # Rosetta Code start position
 
-"""
+
 start = Position([[ 15, 14,  1,  6],
                   [ 9, 11,  4, 12],
                   [ 0, 10,  7,  3],
                   [13,  8,  5,  2]])
-"""
+
 
 # 20 moves
 
@@ -31,13 +31,12 @@ start = Position([[ 0,  1,  3,  4],
 # 21 moves
 
 
-
+"""
 start = Position([[ 9,  1,  3,  4],
                  [  0,  5,  2,  8],
                  [  6, 10, 12,  7],
                  [ 13, 14, 11, 15]])
-
-
+"""
 
 # two moves
 

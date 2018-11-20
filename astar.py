@@ -65,6 +65,19 @@ class Position(object):
     def __ge__(self, other):
         # :nodoc: Delegate comparison to distance.
         return (self.fscore >= other.fscore)
+
+    def __eq__(self, other):
+        # compare two sets of tile positions
+        if other == None:
+            return False
+        return (self.tiles == other.tiles)
+        
+    def __hash__(self):
+        t = self.tiles
+        return hash(((t[0][0], t[0][1], t[0][2], t[0][3]),
+                    (t[1][0], t[1][1], t[1][2], t[1][3]),        
+                    (t[2][0], t[2][1], t[2][2], t[2][3]),        
+                    (t[3][0], t[3][1], t[3][2], t[3][3])))        
         
     def tiles_match(self, other):
         # compare two sets of tile positions

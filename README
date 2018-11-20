@@ -178,3 +178,17 @@ python -m cProfile -s time inttestone.py > timeprofile.txt
 
 Maybe try converting astar.py to use tuples where possible?
 
+htest2.py
+
+trying to test heuristic against a bunch of positions that
+are generated.
+
+My set isn't working it seems. two Position objects with same tiles
+are not eliminated by the set. yuck!
+
+Modified position to define hash function.
+
+Should be able to convert astar to use tuples and hash with them or
+something like that. Must have had a ton of duplicates in the PriorityQueue.
+
+RC test is running for a while but hasn't filled up memory so that's nice.
