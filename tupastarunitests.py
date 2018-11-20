@@ -129,6 +129,7 @@ moves30 = Position([[ 9,  3,  4,  8],
 
 print(hob.heuristic(moves30))
 
+
 # one move
 
 start = Position([[ 1,  2,  3,  4],
@@ -220,6 +221,8 @@ goal = Position([[ 1,  2,  3,  4],
                  [ 9, 10, 11, 12],
                  [13, 14, 15,  0]])
                  
+print("30 moves")
+                 
 result = a_star(start,goal)
 
 p = path_as_0_moves(result)
@@ -233,3 +236,21 @@ for m in p:
     current = do_move(current,m)
     print(current)
     
+print("one move test")
+    
+start = Position([[ 1,  2,  3,  4],
+                 [ 5,  6,  7,  8],
+                 [ 9, 10, 11, 12],
+                 [13, 14, 0,  15]])
+
+
+
+goal = Position([[ 1,  2,  3,  4],
+                 [ 5,  6,  7,  8],
+                 [ 9, 10, 11, 12],
+                 [13, 14, 15,  0]])
+                 
+result = a_star(start,goal)
+
+for p in result:
+    print(p)

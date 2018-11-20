@@ -236,4 +236,17 @@ ddluurdlurulldlurrddllurrulddrdr
 
 Run time in seconds: 1.697198378
 
+Verified we are using both parts of the if in the astar main function.
+
+need to start a new test program to check all of the logic in astar.
+
+tupastar.py is the current best astar version.
+
+Path length = 32
+
+Path using rlud:
+
+ddluurdlurulldlurrddllurrulddrdr
+
+Run time in seconds: 1.6719975219999998
 

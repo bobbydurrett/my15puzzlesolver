@@ -617,7 +617,7 @@ def a_star(start, goal):
                 neighbor.gscore = tentative_gScore
                 neighbor.fscore = neighbor.gscore + hob.heuristic(neighbor)
                 openSet.push(neighbor)
-            elif tentative_gScore < neighbor.gscore: # I am not sure that this is ever true
+            elif tentative_gScore < neighbor.gscore: # This is being used
                 neighbor.cameFrom = current
                 neighbor.gscore = tentative_gScore
                 neighbor.fscore = neighbor.gscore + hob.heuristic(neighbor)
