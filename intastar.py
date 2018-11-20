@@ -89,7 +89,7 @@ class Position(object):
         
     # speed up get_tile and set_tile by pre-calculating bit shifts
         
-    tile_offsets = [[60, 56, 52, 48], [44, 40, 36, 32], [28, 24, 20, 16], [12, 8, 4, 0]]
+    tile_offsets = ((60, 56, 52, 48), (44, 40, 36, 32), (28, 24, 20, 16), (12, 8, 4, 0))
         
     def get_tile(self, row, column):
         """ 
