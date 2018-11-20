@@ -192,3 +192,11 @@ Should be able to convert astar to use tuples and hash with them or
 something like that. Must have had a ton of duplicates in the PriorityQueue.
 
 RC test is running for a while but hasn't filled up memory so that's nice.
+
+tupastar.py seems pretty fast.
+
+Messing with __eq__ made a huge difference.
+
+Need to check priority queue and set implementation.
+
+also astar logic.
