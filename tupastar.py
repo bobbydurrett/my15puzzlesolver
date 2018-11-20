@@ -190,15 +190,21 @@ class PriorityQueue(object):
     """Priority queue with set for fast in calculations """
 
     def __init__(self, object_list):
-        """ save a list in a set and a heap based priority queue"""
+        """ 
+        Save a list in a set and a heap based priority queue.
+        Eliminate duplicates
+        """
         self.qset = set(object_list)
-        self.qheap = object_list
+        self.qheap = []
+        for e in self.qset:
+            self.qheap.append(e)
         heapq.heapify(self.qheap)
         
     def push(self, new_object):
         """ save object in heap and set """
-        heapq.heappush(self.qheap,new_object)
-        self.qset.add(new_object)
+        if new_object not in self.qset:
+            heapq.heappush(self.qheap,new_object)
+            self.qset.add(new_object)
         
     def pop(self):
         """ remove object from heap and set and return """
