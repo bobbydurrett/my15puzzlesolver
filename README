@@ -250,3 +250,16 @@ ddluurdlurulldlurrddllurrulddrdr
 
 Run time in seconds: 1.6719975219999998
 
+This is not good. The minimum path length for this one 
+is 30 but it finds a length 32 path.
+
+So something is wrong.
+
+30 path:
+
+ddluuuldlurrdrdlllurrrullddrdr
+
+32 path:
+
+ddluurdlurulldlurrddllurrulddrdr
+

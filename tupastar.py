@@ -74,13 +74,14 @@ class Position(object):
     def __ge__(self, other):
         # :nodoc: Delegate comparison to distance.
         return ((self.fscore, self.tiles) >= (other.fscore, other.tiles))
-    
+       
     def __eq__(self, other):
         # compare two sets of tile positions
         if other == None:
             return False
-        return self.tiles == other.tiles
             
+        return (self.tiles == other.tiles) and (self.fscore == other.fscore)
+                
     def __hash__(self):
         return hash(self.tiles)        
         
@@ -223,6 +224,14 @@ class PriorityQueue(object):
     def nummembers(self):
         """ get num objects from set size """
         return len(self.qset)
+        
+    def __repr__(self):
+        # printable version of self
+        strrep = ""
+        for e in self.qheap:
+          strrep += str(e.fscore)+":"+str(e)+"\n"
+        
+        return strrep
         
 def linear_conflicts(start_list,goal_list):
     """
@@ -555,11 +564,11 @@ class HeuristicObj(object):
                     distance += abs(row - grow) + abs(col - gcol)
                                         
         # add linear conflicts 
-
+        
         for row in range(4):
             curr_row = start.tiles[row]
             distance += self.row_conflicts[row][curr_row]
-
+       
         for col in range(4):
             col_list =[]
             for row in range(4):
@@ -617,7 +626,7 @@ def a_star(start, goal):
                 neighbor.gscore = tentative_gScore
                 neighbor.fscore = neighbor.gscore + hob.heuristic(neighbor)
                 openSet.push(neighbor)
-            elif tentative_gScore < neighbor.gscore: # This is being used
+            elif tentative_gScore < neighbor.gscore: # Shorter path to openSet element
                 neighbor.cameFrom = current
                 neighbor.gscore = tentative_gScore
                 neighbor.fscore = neighbor.gscore + hob.heuristic(neighbor)
