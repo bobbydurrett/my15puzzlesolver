@@ -68,22 +68,22 @@ start = Position([[ 1,  2,  3,  4],
 
 # 30 moves
 
+"""
+start = Position([[ 9,  3,  4,  8],
+                 [  5,  1, 12,  0],
+                 [  6, 10, 11,  2],
+                 [ 13, 14, 15,  7]])
+
+"""
+
+# path length = 30
+
 
 start = Position([[ 9,  3,  4,  8],
                  [  5,  1, 12,  0],
                  [  6, 10, 11,  2],
                  [ 13, 14, 15,  7]])
 
-
-
-# path length = 1
-
-"""
-start = Position([[ 1,  2,  3,  4],
-                 [ 5,  6,  7,  8],
-                 [ 9, 10, 11, 12],
-                 [13, 14, 0,  15]])
-"""
 goal = Position([[ 1,  2,  3,  4],
                  [ 5,  6,  7,  8],
                  [ 9, 10, 11, 12],
@@ -105,4 +105,13 @@ print(path_as_0_moves(result))
 print(" ")
 print("Run time in seconds: "+str(after - before))
 
+l = len(result) - 1
 
+hob = HeuristicObj(goal)
+
+for p in result:
+    print(l)
+    l -= 1
+    print(hob.heuristic(p))
+    print(" ")
+    

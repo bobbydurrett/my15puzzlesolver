@@ -217,6 +217,12 @@ class PriorityQueue(object):
         """ get num objects from set size """
         return len(self.qset)
         
+    def getelement(self,other):
+        """ return element with same value as other) """
+        for e in self.qset:
+            if e == other:
+                return e
+        
     def __repr__(self):
         # printable version of self
         strrep = ""
@@ -618,11 +624,18 @@ def a_star(start, goal):
                 neighbor.gscore = tentative_gScore
                 neighbor.fscore = neighbor.gscore + hob.heuristic(neighbor)
                 openSet.push(neighbor)
-            elif tentative_gScore < neighbor.gscore: # Shorter path to openSet element
-                neighbor.cameFrom = current
-                neighbor.gscore = tentative_gScore
-                neighbor.fscore = neighbor.gscore + hob.heuristic(neighbor)
-                openSet.heapify()
+            else: # need to get element from openSet and possibly update its scores
+                inopenset = openSet.getelement(neighbor)
+                if tentative_gScore < inopenset.gscore: # Shorter path to openSet element
+#                    print("here")
+#                    print(current)
+#                    print(inopenset)
+#                    print(tentative_gScore)
+#                    print(inopenset.gscore)
+                    inopenset.cameFrom = current
+                    inopenset.gscore = tentative_gScore
+                    inopenset.fscore = inopenset.gscore + hob.heuristic(inopenset)
+                    openSet.heapify()
                 
 def path_as_0_moves(path):
     """

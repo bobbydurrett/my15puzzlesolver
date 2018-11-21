@@ -269,3 +269,24 @@ In __eq__
 
 Had to include fscore. Looks like we have
 multiple position objects with the same fscore!
+
+https://en.wikipedia.org/wiki/A*_search_algorithm
+
+I've shown that my heuristic is no monitone in the length 32 path example:
+
+32
+22
+
+31
+21
+
+30
+20
+
+29
+21
+
+the length 29 path position has a higher heuristic than its neighbor instead of being 1 less or better.
+
+So I may not be able to use astar in the format on the wikipedia article since it isn't guaranteed
+to be minimal path.
