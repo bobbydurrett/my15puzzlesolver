@@ -305,3 +305,8 @@ already exist and returns the existing one. key would be the tiles tuple of tupl
 Then get rid of the closed set. neighbors would get the existing position objects so the else can use neighbor instead
 of finding inopenset.
 
+Directory is getting cluttered. Moved all my files into a directory named old. Made a copy of tupastar.py and called it astar.py
+in top directory. This is my current best version.
+
+
+

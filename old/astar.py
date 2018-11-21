@@ -25,25 +25,16 @@ class Position(object):
 
     def __init__(self, tiles):
         """
-        Takes a tuple of tuples representing the tiles on a 4x4 puzzle board
+        Takes a list of lists representing the tiles on a 4x4 puzzle board
         numbering 1-15 with 0 representing an empty square. For example:
         
-        (( 1,  2,  3,  4),
-         ( 5,  6,  7,  8),
-         ( 9, 10, 11, 12),
-         (13, 14, 15,  0))
-         
-        Converts list of lists representation into tuple of tuples.
+        [[ 1,  2,  3,  4],
+         [ 5,  6,  7,  8],
+         [ 9, 10, 11, 12],
+         [13, 14, 15,  0]]
         """
-        if type(tiles) == type(list()):
-            t = tiles
-            self.tiles = ((t[0][0], t[0][1], t[0][2], t[0][3]),
-                          (t[1][0], t[1][1], t[1][2], t[1][3]),        
-                          (t[2][0], t[2][1], t[2][2], t[2][3]),        
-                          (t[3][0], t[3][1], t[3][2], t[3][3]))
-        else:
-            self.tiles = tiles
-            
+        self.tiles = tiles
+        
         # fields for A* algorithm
         
         self.fscore = integer_infinity
@@ -56,40 +47,50 @@ class Position(object):
         # rlud - right, left, up, down
         
         self.directiontomoveto = None
-                
+        
     # setup for Priority Queue based on fscore
         
     def __lt__(self, other):
-        return self.fscore < other.fscore
+        # :nodoc: Delegate comparison to distance.
+        return (self.fscore < other.fscore)
     
     def __le__(self, other):
-        return self.fscore <= other.fscore
+        # :nodoc: Delegate comparison to distance.
+        return (self.fscore <= other.fscore)
                 
     def __gt__(self, other):
-        return self.fscore > other.fscore
+        # :nodoc: Delegate comparison to distance.
+        return (self.fscore > other.fscore)
     
     def __ge__(self, other):
-        return self.fscore >= other.fscore
-       
+        # :nodoc: Delegate comparison to distance.
+        return (self.fscore >= other.fscore)
+
     def __eq__(self, other):
         # compare two sets of tile positions
         if other == None:
             return False
-            
         return (self.tiles == other.tiles)
-                
-    def __hash__(self):
-        return hash(self.tiles)        
-            
-    def copy_tiles(self):
-        """ returns list of lists version """
-        t = self.tiles
         
-        return [[t[0][0], t[0][1], t[0][2], t[0][3]],
-                [t[1][0], t[1][1], t[1][2], t[1][3]],        
-                [t[2][0], t[2][1], t[2][2], t[2][3]],        
-                [t[3][0], t[3][1], t[3][2], t[3][3]]]        
-
+    def __hash__(self):
+        t = self.tiles
+        return hash(((t[0][0], t[0][1], t[0][2], t[0][3]),
+                    (t[1][0], t[1][1], t[1][2], t[1][3]),        
+                    (t[2][0], t[2][1], t[2][2], t[2][3]),        
+                    (t[3][0], t[3][1], t[3][2], t[3][3])))        
+        
+    def tiles_match(self, other):
+        # compare two sets of tile positions
+        return (self.tiles == other.tiles)
+    
+    def copy_tiles(self):
+        """ returns a copy of the tiles list of lists """
+        new_tiles = []
+        for l in self.tiles:
+            new_row = l[:]
+            new_tiles.append(new_row)
+        
+        return new_tiles
         
     def neighbors(self):
         """
@@ -98,7 +99,7 @@ class Position(object):
         directiontomoveto set to the direction that the
         empty square moved.
         
-        tiles is 4x4 tuple of tuples with
+        tiles is 4x4 list of lists with
         0,0 as top left.
     
         tiles[y][x]
@@ -183,21 +184,15 @@ class PriorityQueue(object):
     """Priority queue with set for fast in calculations """
 
     def __init__(self, object_list):
-        """ 
-        Save a list in a set and a heap based priority queue.
-        Eliminate duplicates
-        """
+        """ save a list in a set and a heap based priority queue"""
         self.qset = set(object_list)
-        self.qheap = []
-        for e in self.qset:
-            self.qheap.append(e)
+        self.qheap = object_list
         heapq.heapify(self.qheap)
         
     def push(self, new_object):
         """ save object in heap and set """
-        if new_object not in self.qset:
-            heapq.heappush(self.qheap,new_object)
-            self.qset.add(new_object)
+        heapq.heappush(self.qheap,new_object)
+        self.qset.add(new_object)
         
     def pop(self):
         """ remove object from heap and set and return """
@@ -216,20 +211,6 @@ class PriorityQueue(object):
     def nummembers(self):
         """ get num objects from set size """
         return len(self.qset)
-        
-    def getelement(self,other):
-        """ return element with same value as other) """
-        for e in self.qset:
-            if e == other:
-                return e
-        
-    def __repr__(self):
-        # printable version of self
-        strrep = ""
-        for e in self.qheap:
-          strrep += str(e.fscore)+":"+str(e)+"\n"
-        
-        return strrep
         
 def linear_conflicts(start_list,goal_list):
     """
@@ -527,13 +508,7 @@ class HeuristicObj(object):
                 self.goal_map[goal.tiles[row][col]] = (row, col)
                 
         # preprocess for linear conflicts
-        
-        self.row_conflicts = []
-        for row in range(4):
-            t = goal.tiles[row]
-            conf_dict = listconflicts([t[0],t[1],t[2],t[3]])
-            self.row_conflicts.append(conf_dict)
-            
+                    
         self.col_conflicts = []
         for col in range(4):
             col_list =[]
@@ -562,11 +537,7 @@ class HeuristicObj(object):
                     distance += abs(row - grow) + abs(col - gcol)
                                         
         # add linear conflicts 
-        
-        for row in range(4):
-            curr_row = start.tiles[row]
-            distance += self.row_conflicts[row][curr_row]
-       
+
         for col in range(4):
             col_list =[]
             for row in range(4):
@@ -606,7 +577,7 @@ def a_star(start, goal):
         if num_popped % 100000 == 0:
             print(str(num_popped)+" positions examined")
         
-        if current == goal:
+        if current.tiles_match(goal):
             return reconstruct_path(current)
             
         closedSet.add(current)
@@ -624,18 +595,11 @@ def a_star(start, goal):
                 neighbor.gscore = tentative_gScore
                 neighbor.fscore = neighbor.gscore + hob.heuristic(neighbor)
                 openSet.push(neighbor)
-            else: # need to get element from openSet and possibly update its scores
-                inopenset = openSet.getelement(neighbor)
-                if tentative_gScore < inopenset.gscore: # Shorter path to openSet element
-#                    print("here")
-#                    print(current)
-#                    print(inopenset)
-#                    print(tentative_gScore)
-#                    print(inopenset.gscore)
-                    inopenset.cameFrom = current
-                    inopenset.gscore = tentative_gScore
-                    inopenset.fscore = inopenset.gscore + hob.heuristic(inopenset)
-                    openSet.heapify()
+            elif tentative_gScore < neighbor.gscore: # I am not sure that this is ever true
+                neighbor.cameFrom = current
+                neighbor.gscore = tentative_gScore
+                neighbor.fscore = neighbor.gscore + hob.heuristic(neighbor)
+                openSet.heapify()
                 
 def path_as_0_moves(path):
     """
