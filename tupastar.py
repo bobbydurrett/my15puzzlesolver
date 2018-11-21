@@ -56,39 +56,31 @@ class Position(object):
         # rlud - right, left, up, down
         
         self.directiontomoveto = None
-        
+                
     # setup for Priority Queue based on fscore
         
     def __lt__(self, other):
-        # :nodoc: Delegate comparison to distance.
-        return ((self.fscore, self.tiles) < (other.fscore, other.tiles))
+        return self.fscore < other.fscore
     
     def __le__(self, other):
-        # :nodoc: Delegate comparison to distance.
-        return ((self.fscore, self.tiles) <= (other.fscore, other.tiles))
+        return self.fscore <= other.fscore
                 
     def __gt__(self, other):
-        # :nodoc: Delegate comparison to distance.
-        return ((self.fscore, self.tiles) > (other.fscore, other.tiles))
+        return self.fscore > other.fscore
     
     def __ge__(self, other):
-        # :nodoc: Delegate comparison to distance.
-        return ((self.fscore, self.tiles) >= (other.fscore, other.tiles))
+        return self.fscore >= other.fscore
        
     def __eq__(self, other):
         # compare two sets of tile positions
         if other == None:
             return False
             
-        return (self.tiles == other.tiles) and (self.fscore == other.fscore)
+        return (self.tiles == other.tiles)
                 
     def __hash__(self):
         return hash(self.tiles)        
-        
-    def tiles_match(self, other):
-        # compare two sets of tile positions
-        return (self.tiles == other.tiles)
-    
+            
     def copy_tiles(self):
         """ returns list of lists version """
         t = self.tiles
@@ -608,7 +600,7 @@ def a_star(start, goal):
         if num_popped % 100000 == 0:
             print(str(num_popped)+" positions examined")
         
-        if current.tiles_match(goal):
+        if current == goal:
             return reconstruct_path(current)
             
         closedSet.add(current)

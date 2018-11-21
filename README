@@ -263,3 +263,9 @@ ddluuuldlurrdrdlllurrrullddrdr
 
 ddluurdlurulldlurrddllurrulddrdr
 
+In __eq__
+
+        return (self.tiles == other.tiles) and (self.fscore == other.fscore)
+
+Had to include fscore. Looks like we have
+multiple position objects with the same fscore!
