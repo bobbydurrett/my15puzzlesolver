@@ -5,6 +5,7 @@ Make sure that the heuristic is <= actual length of path to goal.
 """
 
 from astar import *
+import sys
 
 def do_move(goal,direction):
     """
@@ -105,12 +106,18 @@ def do_test(goal,path_length,hob):
     for e in distinct_positions:
         hvalue = hob.heuristic(e)
         if hvalue > path_length:
-            print("heuristic value = "+str(hvalue))
-            print("path length = "+str(path_length))
+            print("heuristic value = "+str(hvalue)+"\n")
             print("start node:")
             print(e)
             return
             
+if (len(sys.argv) != 2):
+    print("Input path length as first and only argument")
+    exit()
+    
+path_length = int(sys.argv[1])
+
+print("\npath length = "+str(path_length)+"\n")
 
 goal = Position([[ 1,  2,  3,  4],
                  [ 5,  6,  7,  8],
@@ -122,6 +129,4 @@ print(goal)
 
 hob = HeuristicObj(goal)
 
-do_test(goal,10,hob)
-
-
+do_test(goal,path_length,hob)

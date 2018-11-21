@@ -308,5 +308,25 @@ of finding inopenset.
 Directory is getting cluttered. Moved all my files into a directory named old. Made a copy of tupastar.py and called it astar.py
 in top directory. This is my current best version.
 
+Looks like my heuristic isn't even admissable.
+
+C:\bobby\15puzzlesolver\my15puzzlesolver>testheuristic.py 5
+
+path length = 5
+
+goal node:
+(1, 2, 3, 4)
+(5, 6, 7, 8)
+(9, 10, 11, 12)
+(13, 14, 15, 0)
+
+heuristic value = 7
+
+start node:
+(1, 2, 3, 4)
+(5, 6, 7, 8)
+(9, 11, 12, 0)
+(13, 10, 14, 15)
+
 
 
