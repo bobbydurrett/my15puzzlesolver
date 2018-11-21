@@ -290,3 +290,18 @@ the length 29 path position has a higher heuristic than its neighbor instead of 
 
 So I may not be able to use astar in the format on the wikipedia article since it isn't guaranteed
 to be minimal path.
+
+Probably need to verify that my heuristic is at admissible up to 52 nodes if I can.
+
+Probably rearchitect solution to not have closed set.
+
+I'm thinking of using dictionaries with default values instead of storing fscore, gscore, in the node itself
+or a mapping of tiles to rest of these values. That might get rid of the kludgey code in the if statement
+where I switch neighbor with existing position.
+
+Maybe just create a function that makes a new Position object but first checks a dictionary to see if they 
+already exist and returns the existing one. key would be the tiles tuple of tuples. value would be the Position object.
+
+Then get rid of the closed set. neighbors would get the existing position objects so the else can use neighbor instead
+of finding inopenset.
+
