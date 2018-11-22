@@ -127,36 +127,36 @@ class Position(object):
             temp = new_tiles[y0][x0+1]
             new_tiles[y0][x0+1] = 0
             new_tiles[y0][x0] = temp
-            new_position = Position(new_tiles)
-            new_position.directiontomoveto = 'r'
-            neighbor_list.append(new_position)
+            new_pos = new_position(new_tiles)
+            new_pos.directiontomoveto = 'r'
+            neighbor_list.append(new_pos)
         # move 0 to the left
         if x0 > 0:
             new_tiles = self.copy_tiles()
             temp = new_tiles[y0][x0-1]
             new_tiles[y0][x0-1] = 0
             new_tiles[y0][x0] = temp
-            new_position = Position(new_tiles)
-            new_position.directiontomoveto = 'l'
-            neighbor_list.append(new_position)
+            new_pos = new_position(new_tiles)
+            new_pos.directiontomoveto = 'l'
+            neighbor_list.append(new_pos)
         # move 0 up
         if y0 > 0:
             new_tiles = self.copy_tiles()
             temp = new_tiles[y0-1][x0]
             new_tiles[y0-1][x0] = 0
             new_tiles[y0][x0] = temp
-            new_position = Position(new_tiles)
-            new_position.directiontomoveto = 'u'
-            neighbor_list.append(new_position)
+            new_pos = new_position(new_tiles)
+            new_pos.directiontomoveto = 'u'
+            neighbor_list.append(new_pos)
         # move 0 down
         if y0 < 3:
             new_tiles = self.copy_tiles()
             temp = new_tiles[y0+1][x0]
             new_tiles[y0+1][x0] = 0
             new_tiles[y0][x0] = temp
-            new_position = Position(new_tiles)
-            new_position.directiontomoveto = 'd'
-            neighbor_list.append(new_position)
+            new_pos = new_position(new_tiles)
+            new_pos.directiontomoveto = 'd'
+            neighbor_list.append(new_pos)
             
         return neighbor_list
         
@@ -164,6 +164,28 @@ class Position(object):
         # printable version of self
         
         return str(self.tiles[0])+'\n'+str(self.tiles[1])+'\n'+str(self.tiles[2])+'\n'+str(self.tiles[3])+'\n'
+
+# takes tuple of tuples tiles as key, Position object for that tiles as value
+
+all_positions = dict()
+
+def new_position(tiles):
+    """ returns a new position or looks up existing one """
+    if type(tiles) == type(list()):
+        t = tiles
+        tuptiles =   ((t[0][0], t[0][1], t[0][2], t[0][3]),
+                      (t[1][0], t[1][1], t[1][2], t[1][3]),        
+                      (t[2][0], t[2][1], t[2][2], t[2][3]),        
+                      (t[3][0], t[3][1], t[3][2], t[3][3]))
+    else:
+        tuptiles = tiles
+        
+    if tuptiles in all_positions:
+        return 	all_positions[tuptiles]
+    else:
+        new_pos = Position(tiles)
+        all_positions[tuptiles] = new_pos
+        return new_pos
                 
 def reconstruct_path(current):
     """ 
@@ -800,12 +822,11 @@ def a_star(start, goal):
                 neighbor.gscore = tentative_gScore
                 neighbor.fscore = neighbor.gscore + hob.heuristic(neighbor)
                 openSet.push(neighbor)
-            else: # need to get element from openSet and possibly update its scores
-                inopenset = openSet.getelement(neighbor)
-                if tentative_gScore < inopenset.gscore: # Shorter path to openSet element
-                    inopenset.cameFrom = current
-                    inopenset.gscore = tentative_gScore
-                    inopenset.fscore = inopenset.gscore + hob.heuristic(inopenset)
+            else: # in openSet
+                if tentative_gScore < neighbor.gscore: # Shorter path to openSet element
+                    neighbor.cameFrom = current
+                    neighbor.gscore = tentative_gScore
+                    neighbor.fscore = neighbor.gscore + hob.heuristic(neighbor)
                     openSet.heapify()
                 
 def path_as_0_moves(path):
