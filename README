@@ -529,3 +529,38 @@ Path using rlud:
 rrrrrlrlululruurrdluldrruuludr
 
 Run time in seconds: 0.6177602440000001
+
+RC example still slow.
+
+C:\bobby\15puzzlesolver\my15puzzlesolver>python -u testone.py
+100000 positions examined
+200000 positions examined
+300000 positions examined
+400000 positions examined
+500000 positions examined
+600000 positions examined
+700000 positions examined
+800000 positions examined
+900000 positions examined
+Traceback (most recent call last):
+  File "testone.py", line 95, in <module>
+    result = a_star(start,goal)
+  File "C:\bobby\15puzzlesolver\my15puzzlesolver\astar.py", line 829, in a_star
+    openSet.heapify() # update priority queue heap if in
+  File "C:\bobby\15puzzlesolver\my15puzzlesolver\astar.py", line 237, in heapify
+    heapq.heapify(self.qheap)
+  File "C:\bobby\15puzzlesolver\my15puzzlesolver\astar.py", line 62, in __lt__
+    def __lt__(self, other):
+KeyboardInterrupt
+
+C:\bobby\15puzzlesolver\my15puzzlesolver>
+
+after a fair number of minutes. only about 1000 meg memory.
+seems like whenever I control-c out of these it is in heapify.
+
+Need to build a rctest.py script that takes a number 0 - 52
+which follows the RC shortest path (one of them) in reverse
+and then runs a_star on that node.
+Find one that runs for a few minutes and start
+profiling it to optimize.
+
