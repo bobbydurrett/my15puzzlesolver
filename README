@@ -359,3 +359,13 @@ should be 0 returns 2.
         for o in to_remove:
             occupied_squares.remove(o)
  
+ Maybe build 360 member dictionary linear conflict table
+ which is all the possible 4 element orders of
+ 
+ g1, g2, g3, g4, x, x
+ 
+ treat 0 in as if it were an x when
+ converting the real start node
+ to these strings.
+ 
+ 

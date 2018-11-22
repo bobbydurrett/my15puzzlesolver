@@ -17,13 +17,15 @@ start = Position([[ 1,  2,  3,  4],
                   [13, 10, 14, 15]])
 
 
-#hob = HeuristicObj(goal)
-#hvalue = hob.heuristic(start)
+hob = HeuristicObj(goal)
+hvalue = hob.heuristic(start)
 
-#print(hvalue)
+print(hvalue)
 
-start_list = [ 9, 11, 12,  0]
+#start_list = [ 9, 11, 12,  0]
 
-goal_list = [ 9, 10, 11, 12]
+#goal_list = [ 9, 10, 11, 12]
 
-print(linear_conflicts(start_list,goal_list))
+#build_conflict_table()
+
+#print(linear_conflicts(start_list,goal_list))

@@ -6,6 +6,7 @@ Make sure that the heuristic is <= actual length of path to goal.
 
 from astar import *
 import sys
+import time
 
 def do_move(goal,direction):
     """
@@ -129,4 +130,11 @@ print(goal)
 
 hob = HeuristicObj(goal)
 
+before = time.perf_counter()
+
 do_test(goal,path_length,hob)
+
+after = time.perf_counter()
+
+print("Run time in seconds: "+str(after - before))
+

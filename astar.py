@@ -231,6 +231,212 @@ class PriorityQueue(object):
         
         return strrep
         
+conflict_table = None
+
+def build_conflict_table():
+    global conflict_table
+    conflict_table = dict()
+    
+    # assumes goal tuple has up to 
+    # for the given pattern it the start position
+    # how much to add for linear conflicts
+    # 2 per conflict - max of 6
+    
+    # goal tuple is ('g0', 'g1', 'g2', 'g3')
+    
+    conflict_table[('g0', 'g1', 'g2', 'g3')] = 0
+    conflict_table[('g0', 'g1', 'g2', 'x')] = 0
+    conflict_table[('g0', 'g1', 'g3', 'g2')] = 2
+    conflict_table[('g0', 'g1', 'g3', 'x')] = 0
+    conflict_table[('g0', 'g1', 'x', 'g2')] = 0
+    conflict_table[('g0', 'g1', 'x', 'g3')] = 0
+    conflict_table[('g0', 'g1', 'x', 'x')] = 0
+    conflict_table[('g0', 'g2', 'g1', 'g3')] = 2
+    conflict_table[('g0', 'g2', 'g1', 'x')] = 2
+    conflict_table[('g0', 'g2', 'g3', 'g1')] = 4
+    conflict_table[('g0', 'g2', 'g3', 'x')] = 0
+    conflict_table[('g0', 'g2', 'x', 'g1')] = 2
+    conflict_table[('g0', 'g2', 'x', 'g3')] = 0
+    conflict_table[('g0', 'g2', 'x', 'x')] = 0
+    conflict_table[('g0', 'g3', 'g1', 'g2')] = 4 
+    conflict_table[('g0', 'g3', 'g1', 'x')] = 2
+    conflict_table[('g0', 'g3', 'g2', 'g1')] = 4
+    conflict_table[('g0', 'g3', 'g2', 'x')] = 2
+    conflict_table[('g0', 'g3', 'x', 'g1')] = 2
+    conflict_table[('g0', 'g3', 'x', 'g2')] = 2
+    conflict_table[('g0', 'g3', 'x', 'x')] = 0
+    conflict_table[('g0', 'x', 'g1', 'g2')] = 0
+    conflict_table[('g0', 'x', 'g1', 'g3')] = 0
+    conflict_table[('g0', 'x', 'g1', 'x')] = 0
+    conflict_table[('g0', 'x', 'g2', 'g1')] = 2
+    conflict_table[('g0', 'x', 'g2', 'g3')] = 0
+    conflict_table[('g0', 'x', 'g2', 'x')] = 0
+    conflict_table[('g0', 'x', 'g3', 'g1')] = 2
+    conflict_table[('g0', 'x', 'g3', 'g2')] = 2
+    conflict_table[('g0', 'x', 'g3', 'x')] = 0
+    conflict_table[('g0', 'x', 'x', 'g1')] = 0
+    conflict_table[('g0', 'x', 'x', 'g2')] = 0
+    conflict_table[('g0', 'x', 'x', 'g3')] = 0
+    conflict_table[('g1', 'g0', 'g2', 'g3')] = 2
+    conflict_table[('g1', 'g0', 'g2', 'x')] = 2
+    conflict_table[('g1', 'g0', 'g3', 'g2')] = 4 
+    conflict_table[('g1', 'g0', 'g3', 'x')] = 2
+    conflict_table[('g1', 'g0', 'x', 'g2')] = 2
+    conflict_table[('g1', 'g0', 'x', 'g3')] = 2
+    conflict_table[('g1', 'g0', 'x', 'x')] = 2
+    conflict_table[('g1', 'g2', 'g0', 'g3')] = 4 
+    conflict_table[('g1', 'g2', 'g0', 'x')] = 4
+    conflict_table[('g1', 'g2', 'g3', 'g0')] = 6 
+    conflict_table[('g1', 'g2', 'g3', 'x')] = 0
+    conflict_table[('g1', 'g2', 'x', 'g0')] = 4
+    conflict_table[('g1', 'g2', 'x', 'g3')] = 0
+    conflict_table[('g1', 'g2', 'x', 'x')] = 0
+    conflict_table[('g1', 'g3', 'g0', 'g2')] = 4 
+    conflict_table[('g1', 'g3', 'g0', 'x')] = 4
+    conflict_table[('g1', 'g3', 'g2', 'g0')] = 6 
+    conflict_table[('g1', 'g3', 'g2', 'x')] = 0
+    conflict_table[('g1', 'g3', 'x', 'g0')] = 4
+    conflict_table[('g1', 'g3', 'x', 'g2')] = 2
+    conflict_table[('g1', 'g3', 'x', 'x')] = 0
+    conflict_table[('g1', 'x', 'g0', 'g2')] = 2
+    conflict_table[('g1', 'x', 'g0', 'g3')] = 2
+    conflict_table[('g1', 'x', 'g0', 'x')] = 2
+    conflict_table[('g1', 'x', 'g2', 'g0')] = 4
+    conflict_table[('g1', 'x', 'g2', 'g3')] = 0
+    conflict_table[('g1', 'x', 'g2', 'x')] = 0
+    conflict_table[('g1', 'x', 'g3', 'g0')] = 4
+    conflict_table[('g1', 'x', 'g3', 'g2')] = 2
+    conflict_table[('g1', 'x', 'g3', 'x')] = 0
+    conflict_table[('g1', 'x', 'x', 'g0')] = 2
+    conflict_table[('g1', 'x', 'x', 'g2')] = 0
+    conflict_table[('g1', 'x', 'x', 'g3')] = 0
+    conflict_table[('g2', 'g0', 'g1', 'g3')] = 4
+    conflict_table[('g2', 'g0', 'g1', 'x')] = 4
+    conflict_table[('g2', 'g0', 'g3', 'g1')] = 4
+    conflict_table[('g2', 'g0', 'g3', 'x')] = 2
+    conflict_table[('g2', 'g0', 'x', 'g1')] = 4
+    conflict_table[('g2', 'g0', 'x', 'g3')] = 2
+    conflict_table[('g2', 'g0', 'x', 'x')] = 2
+    conflict_table[('g2', 'g1', 'g0', 'g3')] = 4
+    conflict_table[('g2', 'g1', 'g0', 'x')] = 4
+    conflict_table[('g2', 'g1', 'g3', 'g0')] = 6
+    conflict_table[('g2', 'g1', 'g3', 'x')] = 2
+    conflict_table[('g2', 'g1', 'x', 'g0')] = 4
+    conflict_table[('g2', 'g1', 'x', 'g3')] = 2
+    conflict_table[('g2', 'g1', 'x', 'x')] = 2
+    conflict_table[('g2', 'g3', 'g0', 'g1')] = 4
+    conflict_table[('g2', 'g3', 'g0', 'x')] = 4
+    conflict_table[('g2', 'g3', 'g1', 'g0')] = 6
+    conflict_table[('g2', 'g3', 'g1', 'x')] = 4
+    conflict_table[('g2', 'g3', 'x', 'g0')] = 4
+    conflict_table[('g2', 'g3', 'x', 'g1')] = 4
+    conflict_table[('g2', 'g3', 'x', 'x')] = 0
+    conflict_table[('g2', 'x', 'g0', 'g1')] = 4
+    conflict_table[('g2', 'x', 'g0', 'g3')] = 2
+    conflict_table[('g2', 'x', 'g0', 'x')] = 2
+    conflict_table[('g2', 'x', 'g1', 'g0')] = 4
+    conflict_table[('g2', 'x', 'g1', 'g3')] = 2
+    conflict_table[('g2', 'x', 'g1', 'x')] = 2
+    conflict_table[('g2', 'x', 'g3', 'g0')] = 4
+    conflict_table[('g2', 'x', 'g3', 'g1')] = 4
+    conflict_table[('g2', 'x', 'g3', 'x')] = 0
+    conflict_table[('g2', 'x', 'x', 'g0')] = 2
+    conflict_table[('g2', 'x', 'x', 'g1')] = 2
+    conflict_table[('g2', 'x', 'x', 'g3')] = 0
+    conflict_table[('g3', 'g0', 'g1', 'g2')] = 6
+    conflict_table[('g3', 'g0', 'g1', 'x')] = 4
+    conflict_table[('g3', 'g0', 'g2', 'g1')] = 6
+    conflict_table[('g3', 'g0', 'g2', 'x')] = 4
+    conflict_table[('g3', 'g0', 'x', 'g1')] = 4
+    conflict_table[('g3', 'g0', 'x', 'g2')] = 4
+    conflict_table[('g3', 'g0', 'x', 'x')] = 2
+    conflict_table[('g3', 'g1', 'g0', 'g2')] = 6
+    conflict_table[('g3', 'g1', 'g0', 'x')] = 4
+    conflict_table[('g3', 'g1', 'g2', 'g0')] = 6
+    conflict_table[('g3', 'g1', 'g2', 'x')] = 4
+    conflict_table[('g3', 'g1', 'x', 'g0')] = 4
+    conflict_table[('g3', 'g1', 'x', 'g2')] = 4
+    conflict_table[('g3', 'g1', 'x', 'x')] = 2
+    conflict_table[('g3', 'g2', 'g0', 'g1')] = 6
+    conflict_table[('g3', 'g2', 'g0', 'x')] = 4
+    conflict_table[('g3', 'g2', 'g1', 'g0')] = 6
+    conflict_table[('g3', 'g2', 'g1', 'x')] = 4
+    conflict_table[('g3', 'g2', 'x', 'g0')] = 4
+    conflict_table[('g3', 'g2', 'x', 'g1')] = 4
+    conflict_table[('g3', 'g2', 'x', 'x')] = 2
+    conflict_table[('g3', 'x', 'g0', 'g1')] = 4
+    conflict_table[('g3', 'x', 'g0', 'g2')] = 4
+    conflict_table[('g3', 'x', 'g0', 'x')] = 2
+    conflict_table[('g3', 'x', 'g1', 'g0')] = 4
+    conflict_table[('g3', 'x', 'g1', 'g2')] = 4
+    conflict_table[('g3', 'x', 'g1', 'x')] = 2
+    conflict_table[('g3', 'x', 'g2', 'g0')] = 4
+    conflict_table[('g3', 'x', 'g2', 'g1')] = 4
+    conflict_table[('g3', 'x', 'g2', 'x')] = 2
+    conflict_table[('g3', 'x', 'x', 'g0')] = 2
+    conflict_table[('g3', 'x', 'x', 'g1')] = 2
+    conflict_table[('g3', 'x', 'x', 'g2')] = 2
+    conflict_table[('x', 'g0', 'g1', 'g2')] = 0
+    conflict_table[('x', 'g0', 'g1', 'g3')] = 0
+    conflict_table[('x', 'g0', 'g1', 'x')] = 0
+    conflict_table[('x', 'g0', 'g2', 'g1')] = 2
+    conflict_table[('x', 'g0', 'g2', 'g3')] = 0
+    conflict_table[('x', 'g0', 'g2', 'x')] = 0
+    conflict_table[('x', 'g0', 'g3', 'g1')] = 2
+    conflict_table[('x', 'g0', 'g3', 'g2')] = 2
+    conflict_table[('x', 'g0', 'g3', 'x')] = 0
+    conflict_table[('x', 'g0', 'x', 'g1')] = 0
+    conflict_table[('x', 'g0', 'x', 'g2')] = 0
+    conflict_table[('x', 'g0', 'x', 'g3')] = 0
+    conflict_table[('x', 'g1', 'g0', 'g2')] = 2
+    conflict_table[('x', 'g1', 'g0', 'g3')] = 2
+    conflict_table[('x', 'g1', 'g0', 'x')] = 2
+    conflict_table[('x', 'g1', 'g2', 'g0')] = 4
+    conflict_table[('x', 'g1', 'g2', 'g3')] = 0
+    conflict_table[('x', 'g1', 'g2', 'x')] = 0
+    conflict_table[('x', 'g1', 'g3', 'g0')] = 4
+    conflict_table[('x', 'g1', 'g3', 'g2')] = 2
+    conflict_table[('x', 'g1', 'g3', 'x')] = 0
+    conflict_table[('x', 'g1', 'x', 'g0')] = 2
+    conflict_table[('x', 'g1', 'x', 'g2')] = 0
+    conflict_table[('x', 'g1', 'x', 'g3')] = 0
+    conflict_table[('x', 'g2', 'g0', 'g1')] = 4
+    conflict_table[('x', 'g2', 'g0', 'g3')] = 2
+    conflict_table[('x', 'g2', 'g0', 'x')] = 2
+    conflict_table[('x', 'g2', 'g1', 'g0')] = 4
+    conflict_table[('x', 'g2', 'g1', 'g3')] = 2
+    conflict_table[('x', 'g2', 'g1', 'x')] = 2
+    conflict_table[('x', 'g2', 'g3', 'g0')] = 4
+    conflict_table[('x', 'g2', 'g3', 'g1')] = 4
+    conflict_table[('x', 'g2', 'g3', 'x')] = 0
+    conflict_table[('x', 'g2', 'x', 'g0')] = 2
+    conflict_table[('x', 'g2', 'x', 'g1')] = 2
+    conflict_table[('x', 'g2', 'x', 'g3')] = 0
+    conflict_table[('x', 'g3', 'g0', 'g1')] = 4
+    conflict_table[('x', 'g3', 'g0', 'g2')] = 4
+    conflict_table[('x', 'g3', 'g0', 'x')] = 2
+    conflict_table[('x', 'g3', 'g1', 'g0')] = 4
+    conflict_table[('x', 'g3', 'g1', 'g2')] = 4
+    conflict_table[('x', 'g3', 'g1', 'x')] = 2
+    conflict_table[('x', 'g3', 'g2', 'g0')] = 4
+    conflict_table[('x', 'g3', 'g2', 'g1')] = 4
+    conflict_table[('x', 'g3', 'g2', 'x')] = 2
+    conflict_table[('x', 'g3', 'x', 'g0')] = 2
+    conflict_table[('x', 'g3', 'x', 'g1')] = 2
+    conflict_table[('x', 'g3', 'x', 'g2')] = 2
+    conflict_table[('x', 'x', 'g0', 'g1')] = 0
+    conflict_table[('x', 'x', 'g0', 'g2')] = 0
+    conflict_table[('x', 'x', 'g0', 'g3')] = 0
+    conflict_table[('x', 'x', 'g1', 'g0')] = 2
+    conflict_table[('x', 'x', 'g1', 'g2')] = 0
+    conflict_table[('x', 'x', 'g1', 'g3')] = 0
+    conflict_table[('x', 'x', 'g2', 'g0')] = 2
+    conflict_table[('x', 'x', 'g2', 'g1')] = 2
+    conflict_table[('x', 'x', 'g2', 'g3')] = 0
+    conflict_table[('x', 'x', 'g3', 'g0')] = 2
+    conflict_table[('x', 'x', 'g3', 'g1')] = 2
+    conflict_table[('x', 'x', 'g3', 'g2')] = 2
+        
 def linear_conflicts(start_list,goal_list):
     """
     calculates number of moves to add to the estimate of
@@ -241,60 +447,27 @@ def linear_conflicts(start_list,goal_list):
     """
     
     # Find which of the tiles in start_list have their goals on this line
+    # build a pattern to use in a lookup table of this form:
+    # g0, g1, g3, g3 fill in x where there is no goal for this line
     
-    tiles_with_goals = []
-    for s in range(4):
-        for g in range(4):
-            if start_list[s] == goal_list[g] and start_list[s] != 0:
-                # store tile number and the start and goal square number
-                tiles_with_goals.append((start_list[s], s, g))
+    # all 'x' until we file a tile whose goal is in this line
     
-    # have to have 2 tiles with goals on the same line
+    goal_pattern = ['x', 'x', 'x', 'x']
     
-    if len(tiles_with_goals) < 2:
+    for g in range(4):
+        for s in range(4):
+            start_tile_num = start_list[s]
+            if start_tile_num == goal_list[g] and start_tile_num != 0:
+                goal_pattern[s] = 'g' + str(g) # i.e. g0
+                                
+    global conflict_table
+    
+    tup_goal_pattern = tuple(goal_pattern)
+    
+    if tup_goal_pattern in conflict_table:
+        return conflict_table[tuple(goal_pattern)]
+    else:
         return 0
-                
-    # find the squares that each tile in tiles_with_goals
-    # would go through to get to its goal
-    
-    occupied_squares = []
-    
-    for t in tiles_with_goals:
-        tile_num, start_square, goal_square = t
-        if start_square > goal_square:
-            smaller = goal_square
-            larger = start_square
-            direction = 'left'
-        else:
-            smaller = start_square
-            larger = goal_square
-            direction = 'right'
-        squares = set()
-        for x in range(smaller,larger+1):
-            squares.add(x)
-        
-        occupied_squares.append([tile_num, squares, direction, start_square, goal_square]) 
-        
-    # find tiles that move through the same squares and count
-    # the conflicts
-    
-    conflicts = 0
-    
-    while len(occupied_squares) > 0:
-        tile_num, squares, direction, s, g = occupied_squares.pop()
-        # find the tiles who intersect with this tile
-        to_remove = []
-        for o in range(len(occupied_squares)):
-            otile_num, osquares, odirection, os, og = occupied_squares[o]
-            if len(osquares&squares) > 0 and not ((os == g) and (direction == odirection)):
-                conflicts += 1
-                to_remove.append(occupied_squares[o])
-        for o in to_remove:
-            occupied_squares.remove(o)
-            
-    # add 2 to estimate for each linear conflict
-     
-    return 2 * conflicts
     
 class lcmap(dict):
     """ 
@@ -514,6 +687,9 @@ class HeuristicObj(object):
         Preprocess goal position to setup internal data structures
         that can be used to speed up heuristic.
         """
+        
+        build_conflict_table()
+        
         self.goal_map = []
         for i in range(16):
             self.goal_map.append(i)    
@@ -627,11 +803,6 @@ def a_star(start, goal):
             else: # need to get element from openSet and possibly update its scores
                 inopenset = openSet.getelement(neighbor)
                 if tentative_gScore < inopenset.gscore: # Shorter path to openSet element
-#                    print("here")
-#                    print(current)
-#                    print(inopenset)
-#                    print(tentative_gScore)
-#                    print(inopenset.gscore)
                     inopenset.cameFrom = current
                     inopenset.gscore = tentative_gScore
                     inopenset.fscore = inopenset.gscore + hob.heuristic(inopenset)
