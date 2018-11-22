@@ -577,3 +577,16 @@ rrrrullrullrddduduluuuururddluurdrdllurululrd
 
 Run time in seconds: 81.82239044800001
 
+python -m cProfile -s time rctest.py 45 > timeprofile.txt
+
+Run time in seconds: 113.321280917
+         256729863 function calls (256621407 primitive calls) in 113.324 seconds
+
+   Ordered by: internal time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+240654573   60.693    0.000   60.693    0.000 astar.py:62(__lt__)
+     2501   40.105    0.016  100.236    0.040 {built-in method _heapq.heapify}
+     
+Yeah. Have to come up with better way of updating the priority queue.
+
