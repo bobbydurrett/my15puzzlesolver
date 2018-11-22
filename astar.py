@@ -193,6 +193,7 @@ def reconstruct_path(current):
     and then reverses the list to get the path in the correct order.
     """
     total_path = [current]
+
     while current.cameFrom != None:
         current = current.cameFrom
         total_path.append(current)
@@ -774,17 +775,18 @@ class HeuristicObj(object):
           
         return distance
         
+# global variable for heuristic object
+
+hob = None
+        
 def a_star(start, goal):
     """ Based on https://en.wikipedia.org/wiki/A*_search_algorithm """
     
     # Process goal position for use in heuristic
     
+    global hob
     hob = HeuristicObj(goal)
     
-    # The set of nodes already evaluated
-    
-    closedSet = set()
-
     # The set of currently discovered nodes that are not evaluated yet.
     # Initially, only the start node is known.
     # For the first node, the fscore is completely heuristic.
@@ -807,27 +809,24 @@ def a_star(start, goal):
         if current == goal:
             return reconstruct_path(current)
             
-        closedSet.add(current)
-
         for neighbor in current.neighbors():
-            if neighbor in closedSet:
-                continue		# Ignore the neighbor which is already evaluated.
 
             # The distance from start to a neighbor
             # All nodes are 1 move from their neighbors
             tentative_gScore = current.gscore + 1
+            
+            # update gscore and fscore if this is shorter path
+            # to the neighbor node
 
-            if not openSet.isinqueue(neighbor):	# Discover a new node
+            if tentative_gScore < neighbor.gscore: 
                 neighbor.cameFrom = current
                 neighbor.gscore = tentative_gScore
                 neighbor.fscore = neighbor.gscore + hob.heuristic(neighbor)
-                openSet.push(neighbor)
+
+            if not openSet.isinqueue(neighbor):
+                openSet.push(neighbor) # add to open set if not in 
             else: # in openSet
-                if tentative_gScore < neighbor.gscore: # Shorter path to openSet element
-                    neighbor.cameFrom = current
-                    neighbor.gscore = tentative_gScore
-                    neighbor.fscore = neighbor.gscore + hob.heuristic(neighbor)
-                    openSet.heapify()
+                openSet.heapify() # update priority queue heap if in
                 
 def path_as_0_moves(path):
     """

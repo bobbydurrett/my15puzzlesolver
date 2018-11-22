@@ -471,3 +471,49 @@ Since my a_star.py code is based ont the referenced pseudocode and I have shown 
 we know it isn't guaranteed to return the shortest path assuming that my code correctly implemented the pseudocode.
 
 I've testing through all optimal length 11 paths and haven't found a position that contradicts admissibility.
+
+I think I need to try taking the closedSet out.
+
+It should still work. But I need to make sure that we only calculate neighbors once per position
+and only calculate the heuristic once per position.
+
+The gscore could be lowered so that fscore = gscope + h is less but h will never change.
+
+May need a better way to update the priority queue than calling heapify after
+updating fscore.
+
+spins on length 3 path. :)
+
+C:\bobby\15puzzlesolver\my15puzzlesolver>testone.py
+Traceback (most recent call last):
+  File "C:\bobby\15puzzlesolver\my15puzzlesolver\testone.py", line 96, in <module>
+    result = a_star(start,goal)
+  File "C:\bobby\15puzzlesolver\my15puzzlesolver\astar.py", line 809, in a_star
+    return reconstruct_path(current)
+  File "C:\bobby\15puzzlesolver\my15puzzlesolver\astar.py", line 198, in reconstruct_path
+    total_path.append(current)
+MemoryError
+
+if it is in reconstruct_path then it must have found an answer but have a loop.
+
+funny.
+
+(1, 2, 3, 4)
+(5, 6, 7, 8)
+(9, 10, 11, 12)
+(13, 14, 0, 15)
+
+(1, 2, 3, 4)
+(5, 6, 7, 8)
+(9, 10, 0, 12)
+(13, 14, 11, 15)
+
+(1, 2, 3, 4)
+(5, 6, 7, 8)
+(9, 10, 11, 12)
+(13, 14, 0, 15)
+
+(1, 2, 3, 4)
+(5, 6, 7, 8)
+(9, 10, 0, 12)
+(13, 14, 11, 15)
