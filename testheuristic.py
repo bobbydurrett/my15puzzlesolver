@@ -1,12 +1,22 @@
 """
+Based on this description of A*:
 
-Make sure that the heuristic is <= actual length of path to goal.
+https://en.wikipedia.org/wiki/A*_search_algorithm
+
+Make sure that the heuristic is "admissible" and"monotone".
+
+Admissible means that the heuristic is no greater than the actual minimal path length.
+
+Monotone means that for each move which is of weight 1 the heuristic is no more than 1 greater.
+
+Have to do this in breadth first way to make sure paths are shortest
 
 """
 
 from astar import *
 import sys
 import time
+import random
 
 def do_move(goal,direction):
     """
@@ -74,44 +84,75 @@ def do_move(goal,direction):
     
     return Position(board)
     
-def test_solver(goal,path_length,start,path_left,distinct_positions):
-    """
-    Try's every path of length path_length testing solver.
-    
-    top level call is just goal, path_length, goal, path_length
-    
-    last two change with recursive calls.
-    
-    """
-    
-    if path_left <= 0:
-        if start not in distinct_positions:
-            distinct_positions.add(start)
-    else:
-        new_start = do_move(start,'r')
-        if new_start != None:
-            test_solver(goal,path_length,new_start,path_left-1,distinct_positions)
-        new_start = do_move(start,'l')
-        if new_start != None:
-            test_solver(goal,path_length,new_start,path_left-1,distinct_positions)
-        new_start = do_move(start,'u')
-        if new_start != None:
-            test_solver(goal,path_length,new_start,path_left-1,distinct_positions)
-        new_start = do_move(start,'d')
-        if new_start != None:
-            test_solver(goal,path_length,new_start,path_left-1,distinct_positions)
-        
 def do_test(goal,path_length,hob):  
-    distinct_positions = set()
-    test_solver(goal,path_length,goal,path_length,distinct_positions)
-    for e in distinct_positions:
-        hvalue = hob.heuristic(e)
-        if hvalue > path_length:
-            print("heuristic value = "+str(hvalue)+"\n")
-            print("start node:")
-            print(e)
-            return
+    """
+    Need to explore from goal node backwards in a breadth first way so that no nodes are
+    explored twice.
+    """
+    # keep track of all the positions we have looked at so
+    # we don't repeat. start with goal node.
+    
+    explored_positions = set([goal])
+    
+    # current edge of the breadth first search
+    # find all nodes coming out of the frontier that are not already in
+    # explored positions and put them in new_frontier for the next pass
+    
+    frontier = [goal]
+
+    # loop path length times - each pass expands the frontier one step
+    # in the minimum length paths
+
+    for pass_number in range(1,path_length+1):
+        print("Pass number = "+str(pass_number))
+        
+        # explore each position in the frontier
+        
+        new_frontier = [] # populated for each pass
+        
+        for pos in frontier:
+        
+            # get heuristic for current position
             
+            old_hvalue = hob.heuristic(pos)
+        
+            # try each direction
+        
+            for direction in ['r', 'l', 'u', 'd']:
+            
+                new_pos = do_move(pos,direction) # try move
+                if new_pos != None and new_pos not in explored_positions: # true if new position
+                    # save new position
+                    explored_positions.add(new_pos)
+                    new_frontier.append(new_pos)
+                    # check heuristic from old and new positions
+                    # see if they are monotone
+                    new_hvalue = hob.heuristic(new_pos)
+                    
+                    hvdiff = new_hvalue - old_hvalue
+                    failed_a_test = False
+                    if hvdiff < 0 or hvdiff > 1:
+                        print("\nNot monotone\n")
+                        failed_a_test = True
+                    # check if heuristic is admissible
+                    if new_hvalue > pass_number:
+                        print("\nNot admissible\n")
+                        failed_a_test = True
+                    if failed_a_test:
+                        print("Closer to goal:\n")
+                        print(pos)
+                        print("heuristic value = "+str(old_hvalue))
+                        result = a_star(pos,goal)
+                        print("astar path length = "+str(len(result)-1))
+                        print("\nOne step farther from goal:\n")
+                        print(new_pos)
+                        print("heuristic value = "+str(new_hvalue))
+                        result = a_star(new_pos,goal)
+                        print("astar path length = "+str(len(result)-1))
+                       
+                        
+        frontier = new_frontier # set for next pass
+                
 if (len(sys.argv) != 2):
     print("Input path length as first and only argument")
     exit()
@@ -125,7 +166,7 @@ goal = Position([[ 1,  2,  3,  4],
                  [ 9, 10, 11, 12],
                  [13, 14, 15,  0]])
 
-print("goal node:")
+print("goal node:\n")
 print(goal)
 
 hob = HeuristicObj(goal)

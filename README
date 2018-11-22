@@ -448,6 +448,26 @@ astar path length = 6
 
 This is a length 6 path and there are multiple examples where the heuristic closer to the 
 goal in the shortest path has a higher h value than the next position out from the goal.
-So, the Wikipedia A* pseudo code shouldn't be guaranteed to return the shortest path
+So, the Wikipedia A* pseudo code with the closedSet shouldn't be guaranteed to return the shortest path
 under these conditions.
 
+I haven't been able to find an example where my heuristic isn't admissible but 
+there are many examples of where it isn't monotone or consistent.
+
+So, I think I need to think about eliminating the closed set to make the A* code guarantee
+shortest path. Or I need to switch to IDA* which should guarantee shortest path.
+
+https://en.wikipedia.org/wiki/Iterative_deepening_A*
+
+Here is the quote:
+
+Like A*, IDA* is guaranteed to find the shortest path leading from the given start node to any goal node in the problem graph, if the heuristic function h is admissible
+
+But in the A* article it says:
+
+"the above pseudocode assumes that the heuristic function is monotonic (or consistent"
+
+Since my a_star.py code is based ont the referenced pseudocode and I have shown examples of the heuristic not being monotonic 
+we know it isn't guaranteed to return the shortest path assuming that my code correctly implemented the pseudocode.
+
+I've testing through all optimal length 11 paths and haven't found a position that contradicts admissibility.
