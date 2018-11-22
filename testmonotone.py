@@ -4,6 +4,8 @@ Make sure that the heuristic is "monotone"
 
 This means that for each move which is of weight 1 the heuristic is no more than 1 greater.
 
+Have to do this in breadth first way to make sure paths are shortest
+
 """
 
 from astar import *
@@ -78,24 +80,65 @@ def do_move(goal,direction):
     return Position(board)
     
 def do_test(goal,path_length,hob):  
-    start = goal
-    path_left = path_length
-    new_hvalue = hob.heuristic(start)
-    while path_left > 0:
-        direction = random.choice(['r', 'l', 'u', 'd'])
-        old_hvalue = new_hvalue
-        new_start = do_move(start,direction)
-        if new_start != None:
-            print(direction)
-            start = new_start
-            path_left -= 1
-            new_hvalue = hob.heuristic(new_start)
-            hvdiff = new_hvalue - old_hvalue
-            if hvdiff < 0 or hvdiff > 1:
-                print("Not monotone")
-                print(start)
-                print(old_hvalue)
-                print(new_hvalue)
+    """
+    Need to explore from goal node backwards in a breadth first way so that no nodes are
+    explored twice.
+    """
+    # keep track of all the positions we have looked at so
+    # we don't repeat. start with goal node.
+    
+    explored_positions = set([goal])
+    
+    # current edge of the breadth first search
+    # find all nodes coming out of the frontier that are not already in
+    # explored positions and put them in new_frontier for the next pass
+    
+    frontier = [goal]
+
+    # loop path length times - each pass expands the frontier one step
+    # in the minimum length paths
+
+    for pass_number in range(1,path_length+1):
+        print("Pass number = "+str(pass_number))
+        
+        # explore each position in the frontier
+        
+        new_frontier = [] # populated for each pass
+        
+        for pos in frontier:
+        
+            # get heuristic for current position
+            
+            old_hvalue = hob.heuristic(pos)
+        
+            # try each direction
+        
+            for direction in ['r', 'l', 'u', 'd']:
+            
+                new_pos = do_move(pos,direction) # try move
+                if new_pos != None and new_pos not in explored_positions: # true if new position
+                    # save new position
+                    explored_positions.add(new_pos)
+                    new_frontier.append(new_pos)
+                    # check heuristic from old and new positions
+                    # see if they are monotone
+                    new_hvalue = hob.heuristic(new_pos)
+                    
+                    hvdiff = new_hvalue - old_hvalue
+                    if hvdiff < 0 or hvdiff > 1:
+                        print("\nNot monotone\n")
+                        print("Closer to goal:\n")
+                        print(pos)
+                        print("heuristic value = "+str(old_hvalue))
+                        result = a_star(pos,goal)
+                        print("astar path length = "+str(len(result)-1))
+                        print("\nOne step farther from goal:\n")
+                        print(new_pos)
+                        print("heuristic value = "+str(new_hvalue))
+                        result = a_star(new_pos,goal)
+                        print("astar path length = "+str(len(result)-1))
+                        
+        frontier = new_frontier # set for next pass
                 
 if (len(sys.argv) != 2):
     print("Input path length as first and only argument")
@@ -110,7 +153,7 @@ goal = Position([[ 1,  2,  3,  4],
                  [ 9, 10, 11, 12],
                  [13, 14, 15,  0]])
 
-print("goal node:")
+print("goal node:\n")
 print(goal)
 
 hob = HeuristicObj(goal)

@@ -401,3 +401,53 @@ heuristic is monotone along it.
 
 could change my monotone checker to make sure we don't repeat
 a position using a dictionary or set.
+
+I guess would have to change testmonotone to do a 
+breadth first expansion of the nodes to make sure
+it was a shortest path and then
+check for monotone heuristic along the paths.
+
+If I did my monotone test right then my heuristic is not monotone:
+
+path length = 6
+
+goal node:
+(1, 2, 3, 4)
+(5, 6, 7, 8)
+(9, 10, 11, 12)
+(13, 14, 15, 0)
+
+Pass number = 1
+Pass number = 2
+Pass number = 3
+Pass number = 4
+Pass number = 5
+Pass number = 6
+
+Not monotone
+
+Closer to goal:
+
+(1, 2, 3, 4)
+(5, 6, 7, 8)
+(9, 11, 14, 12)
+(13, 10, 0, 15)
+
+heuristic value = 5
+astar path length = 5
+
+One step farther from goal:
+
+(1, 2, 3, 4)
+(5, 6, 7, 8)
+(9, 11, 14, 12)
+(13, 10, 15, 0)
+
+heuristic value = 4
+astar path length = 6
+
+This is a length 6 path and there are multiple examples where the heuristic closer to the 
+goal in the shortest path has a higher h value than the next position out from the goal.
+So, the Wikipedia A* pseudo code shouldn't be guaranteed to return the shortest path
+under these conditions.
+
