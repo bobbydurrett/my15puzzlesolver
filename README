@@ -564,3 +564,16 @@ and then runs a_star on that node.
 Find one that runs for a few minutes and start
 profiling it to optimize.
 
+Pretty neat. Gets longer at length 45:
+
+C:\bobby\15puzzlesolver\my15puzzlesolver>rctest.py 45
+100000 positions examined
+
+Path length = 45
+
+Path using rlud:
+
+rrrrullrullrddduduluuuururddluurdrdllurululrd
+
+Run time in seconds: 81.82239044800001
+
