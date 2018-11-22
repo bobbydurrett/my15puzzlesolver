@@ -590,3 +590,18 @@ Run time in seconds: 113.321280917
      
 Yeah. Have to come up with better way of updating the priority queue.
 
+Maybe change our priority queue to use this kind of element:
+
+(fscore, tiles)
+
+We already have a dictionary that maps tiles to Position type objects.
+
+We could just push a new (fscore, tiles) entry when fscore is lowered.
+
+Whenever we pop from the heapq if the fscore doesn't match the current
+position for tiles then discard and pop the next entry.
+
+Could get rid of the lt, le, gt, ge stuff.  not sure about eq and hash.
+
+
+
