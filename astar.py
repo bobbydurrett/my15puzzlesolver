@@ -823,10 +823,10 @@ def a_star(start, goal):
                 neighbor.gscore = tentative_gScore
                 neighbor.fscore = neighbor.gscore + hob.heuristic(neighbor)
 
-            if not openSet.isinqueue(neighbor):
-                openSet.push(neighbor) # add to open set if not in 
-            else: # in openSet
-                openSet.heapify() # update priority queue heap if in
+                if not openSet.isinqueue(neighbor):
+                    openSet.push(neighbor) # add to open set if not in 
+                else: # in openSet
+                    openSet.heapify() # update priority queue heap if in
                 
 def path_as_0_moves(path):
     """

@@ -517,3 +517,15 @@ funny.
 (5, 6, 7, 8)
 (9, 10, 0, 12)
 (13, 14, 11, 15)
+
+Fixed length 30 to run fast:
+
+C:\bobby\15puzzlesolver\my15puzzlesolver>python -u testone.py
+
+Path length = 30
+
+Path using rlud:
+
+rrrrrlrlululruurrdluldrruuludr
+
+Run time in seconds: 0.6177602440000001
