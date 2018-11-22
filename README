@@ -603,5 +603,9 @@ position for tiles then discard and pop the next entry.
 
 Could get rid of the lt, le, gt, ge stuff.  not sure about eq and hash.
 
+ALso could get rid of set and the check to see if item is in queue.
+
+We are just pushing whenever gscore (and hence fscore) goes down.
+
 
 
