@@ -10,12 +10,12 @@ import time
 
 # Rosetta Code start position
 
-"""
+
 start = Position([[ 15, 14,  1,  6],
                   [ 9, 11,  4, 12],
                   [ 0, 10,  7,  3],
                   [13,  8,  5,  2]])
-"""
+
 
 # 20 moves
 
@@ -76,14 +76,14 @@ start = Position([[ 9,  3,  4,  8],
 
 """
 
-# path length = 30
+# path length = 33
 
-
-start = new_position([[ 9,  3,  4,  8],
-                      [  5,  1, 12,  0],
-                      [  6, 10, 11,  2],
+"""
+start = new_position([[  5,  9,  4,  8],
+                      [  3, 10,  1, 12],
+                      [  6,  0, 11,  2],
                       [ 13, 14, 15,  7]])
-
+"""
 goal = new_position([[ 1,  2,  3,  4],
                      [ 5,  6,  7,  8],
                      [ 9, 10, 11, 12],

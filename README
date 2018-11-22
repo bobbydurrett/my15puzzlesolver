@@ -370,4 +370,34 @@ should be 0 returns 2.
  converting the real start node
  to these strings.
  
+ Down to 1 second for length 30
+ Still not sure we have monotone heuristic.
  
+ C:\bobby\15puzzlesolver\my15puzzlesolver>testone.py
+ 
+ Path length = 30
+ 
+ Path using rlud:
+ 
+ urrrrrlrlululrdurrdluldrruuludr
+ 
+Run time in seconds: 1.00510262
+
+I think build a script called rctest.py that takes the
+path length as the argument.
+
+The Rosetta Code example is a length 52 path.
+
+If I passed say 40 to rctest.py it would apply the known
+moves from the RC start position go get to the
+position 40 moves away from the goal.
+Then it would run astar against it.
+
+Once I find the smallest path that runs for a couple of 
+minutes I can profile it.
+
+Also could check the RC path to see if the
+heuristic is monotone along it.
+
+could change my monotone checker to make sure we don't repeat
+a position using a dictionary or set.
