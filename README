@@ -641,3 +641,11 @@ million positions we having these recalculated.
 If I want to get this any faster I would have
 to speed up the heuristic.
 
+perftestheuristic.py
+
+21 seconds total h time
+
+13 for md only
+
+so that is 8 for lc
+
