@@ -730,10 +730,8 @@ class HeuristicObj(object):
             distance += self.row_conflicts[row][curr_row]
        
         for col in range(4):
-            col_list =[]
-            for row in range(4):
-                col_list.append(start.tiles[row][col])
-            col_tuple = tuple(col_list)
+            t = start.tiles
+            col_tuple = (t[0][col], t[1][col], t[2][col], t[3][col])
             distance += self.col_conflicts[col][col_tuple]
           
         return distance
