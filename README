@@ -632,3 +632,12 @@ This is the second Rosetta Code optimal length solution.
 python -m cProfile -s time testone.py > timeprofile.txt
 
 python -m cProfile -s cumtime testone.py > cumtimeprofile.txt
+
+Tried to speed things up by saving the heuristic value and 
+neighbors list for each position so they did not have
+to be recreated but only about 30,000 out of over a 
+million positions we having these recalculated.
+
+If I want to get this any faster I would have
+to speed up the heuristic.
+
