@@ -688,6 +688,10 @@ class HeuristicObj(object):
             for col in range(4):
                 self.goal_map[goal.tiles[row][col]] = (row, col)
                 
+        # make access faster by changing to a tuple
+        
+        self.goal_map = tuple(self.goal_map)
+                
         # preprocess for linear conflicts
         
         self.row_conflicts = []
