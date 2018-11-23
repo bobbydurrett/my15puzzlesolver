@@ -718,25 +718,31 @@ class HeuristicObj(object):
         
         distance = 0
         
+        # local variables for instance variables
+        
+        t = start.tiles
+        g = self.goal_map
+        rc = self.row_conflicts
+        cc = self.col_conflicts
+        
         # calculate manhattan distance
         
         for row in range(4):
             for col in range(4):
-                start_tilenum = start.tiles[row][col]
+                start_tilenum = t[row][col]
                 if start_tilenum != 0:
-                    (grow, gcol) = self.goal_map[start_tilenum]
+                    (grow, gcol) = g[start_tilenum]
                     distance += abs(row - grow) + abs(col - gcol)
                                         
         # add linear conflicts 
         
         for row in range(4):
-            curr_row = start.tiles[row]
-            distance += self.row_conflicts[row][curr_row]
+            curr_row = t[row]
+            distance += rc[row][curr_row]
        
         for col in range(4):
-            t = start.tiles
             col_tuple = (t[0][col], t[1][col], t[2][col], t[3][col])
-            distance += self.col_conflicts[col][col_tuple]
+            distance += cc[col][col_tuple]
           
         return distance
         
