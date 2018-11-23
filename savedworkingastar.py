@@ -50,7 +50,31 @@ class Position(object):
         self.gscore = integer_infinity
         
         self.cameFrom = None
-                                    
+                        
+    # setup for Priority Queue based on fscore
+        
+    def __lt__(self, other):
+        return self.fscore < other.fscore
+    
+    def __le__(self, other):
+        return self.fscore <= other.fscore
+                
+    def __gt__(self, other):
+        return self.fscore > other.fscore
+    
+    def __ge__(self, other):
+        return self.fscore >= other.fscore
+       
+    def __eq__(self, other):
+        # compare two sets of tile positions
+        if other == None:
+            return False
+            
+        return (self.tiles == other.tiles)
+                
+    def __hash__(self):
+        return hash(self.tiles)        
+            
     def copy_tiles(self):
         """ returns list of lists version """
         t = self.tiles

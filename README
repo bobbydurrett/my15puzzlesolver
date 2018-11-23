@@ -629,6 +629,6 @@ Run time in seconds: 66.09170769100001
 
 This is the second Rosetta Code optimal length solution.
 
+python -m cProfile -s time testone.py > timeprofile.txt
 
-
-
+python -m cProfile -s cumtime testone.py > cumtimeprofile.txt
