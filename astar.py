@@ -50,13 +50,7 @@ class Position(object):
         self.gscore = integer_infinity
         
         self.cameFrom = None
-        
-        # This is for Rosetta Code
-        # Move direction of the empty square to get to this point
-        # rlud - right, left, up, down
-        
-        self.directiontomoveto = None
-                
+                        
     # setup for Priority Queue based on fscore
         
     def __lt__(self, other):
@@ -128,7 +122,6 @@ class Position(object):
             new_tiles[y0][x0+1] = 0
             new_tiles[y0][x0] = temp
             new_pos = new_position(new_tiles)
-            new_pos.directiontomoveto = 'r'
             neighbor_list.append(new_pos)
         # move 0 to the left
         if x0 > 0:
@@ -137,7 +130,6 @@ class Position(object):
             new_tiles[y0][x0-1] = 0
             new_tiles[y0][x0] = temp
             new_pos = new_position(new_tiles)
-            new_pos.directiontomoveto = 'l'
             neighbor_list.append(new_pos)
         # move 0 up
         if y0 > 0:
@@ -146,7 +138,6 @@ class Position(object):
             new_tiles[y0-1][x0] = 0
             new_tiles[y0][x0] = temp
             new_pos = new_position(new_tiles)
-            new_pos.directiontomoveto = 'u'
             neighbor_list.append(new_pos)
         # move 0 down
         if y0 < 3:
@@ -155,7 +146,6 @@ class Position(object):
             new_tiles[y0+1][x0] = 0
             new_tiles[y0][x0] = temp
             new_pos = new_position(new_tiles)
-            new_pos.directiontomoveto = 'd'
             neighbor_list.append(new_pos)
             
         return neighbor_list
@@ -171,6 +161,7 @@ all_positions = dict()
 
 def new_position(tiles):
     """ returns a new position or looks up existing one """
+    global all_positions
     if type(tiles) == type(list()):
         t = tiles
         tuptiles =   ((t[0][0], t[0][1], t[0][2], t[0][3]),
@@ -203,54 +194,50 @@ def reconstruct_path(current):
     return total_path
         
 class PriorityQueue(object):
-    """Priority queue with set for fast in calculations """
+    """
+    Priority queue using heapq.
+    elements of queue are (fscore,tiles) for each position.
+    If element is removed from queue and fscore doesn't match
+    then that element is discarded.
+    """
 
     def __init__(self, object_list):
         """ 
-        Save a list in a set and a heap based priority queue.
-        Eliminate duplicates
+        Save a list in a heapq.
+        Assume that each object only appears once
+        in the list.
         """
-        self.qset = set(object_list)
+        self.queue_length = 0
         self.qheap = []
-        for e in self.qset:
-            self.qheap.append(e)
+        for e in object_list:
+            self.qheap.append((e.fscore,e.tiles))
+            self.queue_length += 1
         heapq.heapify(self.qheap)
         
     def push(self, new_object):
-        """ save object in heap and set """
-        if new_object not in self.qset:
-            heapq.heappush(self.qheap,new_object)
-            self.qset.add(new_object)
+        """ save object in heapq """
+        heapq.heappush(self.qheap,(new_object.fscore,new_object.tiles))
+        self.queue_length += 1
         
     def pop(self):
-        """ remove object from heap and set and return """
-        popped_object = heapq.heappop(self.qheap)
-        self.qset.remove(popped_object)
-        return popped_object
-        
-    def isinqueue(self,checked_object):
-        """ check set for object """
-        return checked_object in self.qset
-        
-    def heapify(self):
-        """ reorg the heap if priorities updated or new list """
-        heapq.heapify(self.qheap)
-        
-    def nummembers(self):
-        """ get num objects from set size """
-        return len(self.qset)
-        
-    def getelement(self,other):
-        """ return element with same value as other) """
-        for e in self.qset:
-            if e == other:
-                return e
-        
+        """ remove object from heap and return """
+        if self.queue_length < 1:
+            return None
+        fscore, tiles = heapq.heappop(self.qheap)
+        self.queue_length -= 1
+        global all_positions
+        pos = all_positions[tiles]
+        if pos.fscore == fscore:
+            return pos
+        else:
+            return self.pop()
+                
     def __repr__(self):
         # printable version of self
         strrep = ""
         for e in self.qheap:
-          strrep += str(e.fscore)+":"+str(e)+"\n"
+          fscore, tiles = e
+          strrep += str(fscore)+":"+str(tiles)+"\n"
         
         return strrep
         
@@ -779,8 +766,11 @@ class HeuristicObj(object):
 
 hob = None
         
-def a_star(start, goal):
+def a_star(start_tiles, goal_tiles):
     """ Based on https://en.wikipedia.org/wiki/A*_search_algorithm """
+    
+    start = new_position(start_tiles)
+    goal = new_position(goal_tiles)
     
     # Process goal position for use in heuristic
     
@@ -800,8 +790,10 @@ def a_star(start, goal):
     
     num_popped = 0
     
-    while openSet.nummembers() > 0:
+    while openSet.queue_length > 0:
         current = openSet.pop()
+        if current == None: # tried to pop but only found old fscore values
+            break
         num_popped += 1
         if num_popped % 100000 == 0:
             print(str(num_popped)+" positions examined")
@@ -813,6 +805,7 @@ def a_star(start, goal):
 
             # The distance from start to a neighbor
             # All nodes are 1 move from their neighbors
+            
             tentative_gScore = current.gscore + 1
             
             # update gscore and fscore if this is shorter path
@@ -822,12 +815,16 @@ def a_star(start, goal):
                 neighbor.cameFrom = current
                 neighbor.gscore = tentative_gScore
                 neighbor.fscore = neighbor.gscore + hob.heuristic(neighbor)
-
-                if not openSet.isinqueue(neighbor):
-                    openSet.push(neighbor) # add to open set if not in 
-                else: # in openSet
-                    openSet.heapify() # update priority queue heap if in
+                openSet.push(neighbor) # add to open set every time
                 
+
+def find_zero(tiles):
+    """ file the 0 tile """
+    for row in range(4):
+        for col in range(4):
+            if tiles[row][col] == 0:
+                return (row, col)
+
 def path_as_0_moves(path):
     """
     Takes the path which is a list of Position
@@ -836,9 +833,24 @@ def path_as_0_moves(path):
     Rosetta Code task.
     """
     strpath = ""
-    for p in path:
-        if p.directiontomoveto != None:
-            strpath += p.directiontomoveto
-        
+    if len(path) < 1:
+        return ""
+    prev_pos = path[0]
+    p_row, p_col = find_zero(prev_pos.tiles)
+    for i in range(1,len(path)):
+        curr_pos = path[i]
+        c_row, c_col = find_zero(curr_pos.tiles)
+        if c_row > p_row:
+            strpath += 'd'
+        elif c_row < p_row:
+            strpath += 'u'
+        elif c_col > p_col:
+            strpath += 'r'
+        elif c_col < p_col:
+            strpath += 'l'
+        # reset for next loop
+        prev_pos = curr_pos
+        p_row = c_row
+        p_col = c_col
     return strpath
         

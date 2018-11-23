@@ -27,17 +27,17 @@ if path_length < 0 or path_length > 52:
 
 path_index = 52 - path_length # path listed from start to finish
 
-start = rc_path_1[path_index]
+start_tiles = rc_path_1[path_index].tiles
 
-goal = new_position([[ 1,  2,  3,  4],
+goal_tiles =        [[ 1,  2,  3,  4],
                      [ 5,  6,  7,  8],
                      [ 9, 10, 11, 12],
-                     [13, 14, 15,  0]])
+                     [13, 14, 15,  0]]
                  
 
 before = time.perf_counter()
 
-result = a_star(start,goal)
+result = a_star(start_tiles,goal_tiles)
 
 after = time.perf_counter()
 

@@ -603,9 +603,32 @@ position for tiles then discard and pop the next entry.
 
 Could get rid of the lt, le, gt, ge stuff.  not sure about eq and hash.
 
-ALso could get rid of set and the check to see if item is in queue.
+Also could get rid of set and the check to see if item is in queue.
 
 We are just pushing whenever gscore (and hence fscore) goes down.
+
+Finally got RC start position to run in a minute:
+
+C:\bobby\15puzzlesolver\my15puzzlesolver>testone.py
+100000 positions examined
+200000 positions examined
+300000 positions examined
+400000 positions examined
+500000 positions examined
+600000 positions examined
+700000 positions examined
+800000 positions examined
+
+Path length = 52
+
+Path using rlud:
+
+rrruldluuldrurdddluulurrrdlddruldluurddlulurruldrrdd
+
+Run time in seconds: 66.09170769100001
+
+This is the second Rosetta Code optimal length solution.
+
 
 
 
