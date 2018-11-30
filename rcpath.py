@@ -25,7 +25,7 @@ def do_move(goal,direction):
     """
     
     board = goal.copy_tiles()
-
+    
     # find 0 - blank square
     
     x0 = None
@@ -90,8 +90,8 @@ def follow_path(start, goal, path):
         new_pos = do_move(pos,direction)
         out_list.append(new_pos)
         pos = new_pos
-    
-    if pos == goal:
+
+    if pos.tiles == goal.tiles:
         return out_list
     else:
         return None # some error occurred

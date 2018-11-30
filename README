@@ -651,3 +651,31 @@ so that is 8 for lc
 
 I think this is good enough to publish on RC.
 
+Want to try two suggestions from this web page:
+
+http://jamie-wong.com/2011/10/16/fifteen-puzzle-algorithm/
+
+1 - make sure we don't try a neighbor that sends us right back where we came from
+
+2 - randomize the order of the neighbors
+
+Before any of this:
+
+C:\bobby\15puzzlesolver\my15puzzlesolver>testone.py
+100000 positions examined
+200000 positions examined
+300000 positions examined
+400000 positions examined
+500000 positions examined
+600000 positions examined
+700000 positions examined
+800000 positions examined
+
+Path length = 52
+
+Path using rlud:
+
+rrruldluuldrurdddluulurrrdlddruldluurddlulurruldrrdd
+
+Run time in seconds: 57.353683103
+
